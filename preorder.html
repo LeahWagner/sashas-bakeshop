@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preorder — Sasha's Bakeshop</title>
+  <meta name="description" content="Reserve fresh breads and pastries from Sasha's Bakeshop for pickup." />
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Sasha's Bakeshop — home">
+        <img src="assets/logo.svg" alt="" />
+        <span class="brand-name">Sasha's Bakeshop</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="preorder.html" class="is-active">Preorder</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="section container">
+      <span class="eyebrow">Preorder</span>
+      <h1 class="mt-0">Reserve your bake</h1>
+      <p class="lead">Tell us what you'd like and when you'd like to pick it up. We'll confirm by email. (This is a starter form — we'll connect it to real ordering once your menu and workflow are set.)</p>
+
+      <form class="form" data-form style="margin-top:2rem">
+        <div class="field-row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="pickup-date">Pickup date</label>
+            <input id="pickup-date" name="pickup-date" type="date" required />
+          </div>
+          <div class="field">
+            <label for="item">Item</label>
+            <select id="item" name="item" required>
+              <option value="" disabled selected>Choose an item…</option>
+              <option>Sourdough loaf</option>
+              <option>Baguette</option>
+              <option>Croissants (4-pack)</option>
+              <option>Cinnamon rolls (6-pack)</option>
+              <option>Seasonal special</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input id="quantity" name="quantity" type="number" min="1" value="1" required />
+        </div>
+
+        <div class="field">
+          <label for="notes">Notes / special requests</label>
+          <textarea id="notes" name="notes" placeholder="Allergies, preferences, pickup time…"></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Submit preorder</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+        <p class="form-note">By submitting you'll receive a confirmation email. Payment is arranged at pickup for now.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Sasha's Bakeshop. Baked with love.</p>
+      <ul class="footer-links">
+        <li><a href="preorder.html">Preorder</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

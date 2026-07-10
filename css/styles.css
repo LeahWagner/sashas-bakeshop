@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Sasha's Bakeshop — Base stylesheet
+   --------------------------------------------------------------------------
+   BRAND TOKENS live in :root below. When brand guidelines arrive, most of the
+   reskin happens by editing these variables only — colors, fonts, radius, etc.
+   ========================================================================== */
+
+:root {
+  /* --- Color (placeholder warm-bakery palette; swap for brand) --- */
+  --color-bg:          #fbf7f0;   /* page background — warm cream */
+  --color-surface:     #ffffff;   /* cards / raised surfaces */
+  --color-ink:         #2b2320;   /* primary text — warm near-black */
+  --color-ink-soft:    #6b5f57;   /* secondary text */
+  --color-accent:      #b5764a;   /* primary brand accent — toasted caramel */
+  --color-accent-ink:  #ffffff;   /* text on accent */
+  --color-accent-soft: #f0e3d6;   /* accent tint for chips / hovers */
+  --color-line:        #e7ddd1;   /* hairline borders */
+
+  /* --- Typography (placeholder; swap for brand fonts) --- */
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --fs-hero:   clamp(2.4rem, 5vw, 4rem);
+  --fs-h2:     clamp(1.6rem, 3vw, 2.4rem);
+  --fs-body:   1.05rem;
+  --fs-small:  0.9rem;
+
+  /* --- Shape & space --- */
+  --radius:     14px;
+  --radius-sm:  8px;
+  --shadow:     0 6px 24px rgba(43, 35, 32, 0.08);
+  --maxw:       1080px;
+  --gutter:     clamp(1.2rem, 4vw, 2.5rem);
+}
+
+/* --- Reset-ish --- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; font-weight: 700; }
+
+/* --- Layout helpers --- */
+.container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.section  { padding-block: clamp(3rem, 7vw, 6rem); }
+.center   { text-align: center; }
+.lead     { font-size: 1.15rem; color: var(--color-ink-soft); max-width: 60ch; }
+.center .lead { margin-inline: auto; }
+
+/* ==========================================================================
+   Header / Nav
+   ========================================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-line);
+}
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; min-height: 68px;
+}
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; }
+.brand:hover { text-decoration: none; }
+.brand img { height: 40px; width: auto; }
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 1.25rem; color: var(--color-ink);
+  letter-spacing: 0.01em;
+}
+
+.nav-links { display: flex; align-items: center; gap: 0.4rem; list-style: none; margin: 0; padding: 0; }
+.nav-links a {
+  color: var(--color-ink); padding: 0.5rem 0.85rem; border-radius: var(--radius-sm);
+  font-weight: 500; font-size: 0.98rem;
+}
+.nav-links a:hover { background: var(--color-accent-soft); text-decoration: none; }
+.nav-links a.is-active { color: var(--color-accent); font-weight: 600; }
+
+.nav-toggle {
+  display: none; background: none; border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; cursor: pointer;
+  color: var(--color-ink); font-size: 1.2rem; line-height: 1;
+}
+
+@media (max-width: 720px) {
+  .nav-toggle { display: inline-flex; }
+  .nav-links {
+    position: absolute; top: 68px; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--color-surface); border-bottom: 1px solid var(--color-line);
+    padding: 0.5rem var(--gutter) 1rem;
+    display: none;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a { padding: 0.75rem 0.5rem; border-radius: 0; }
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.8rem 1.5rem; border-radius: 999px; font-weight: 600; font-size: 1rem;
+  cursor: pointer; border: 1px solid transparent; transition: transform .08s ease, background .2s ease;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); }
+.btn-primary { background: var(--color-accent); color: var(--color-accent-ink); }
+.btn-primary:hover { background: color-mix(in srgb, var(--color-accent) 88%, black); }
+.btn-ghost { background: transparent; color: var(--color-ink); border-color: var(--color-line); }
+.btn-ghost:hover { background: var(--color-accent-soft); }
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero { padding-block: clamp(3.5rem, 9vw, 7rem); }
+.hero h1 { font-size: var(--fs-hero); margin: 0 0 1rem; }
+.hero .lead { margin-bottom: 2rem; }
+.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.center .hero-actions { justify-content: center; }
+.eyebrow {
+  display: inline-block; text-transform: uppercase; letter-spacing: 0.16em;
+  font-size: 0.78rem; font-weight: 700; color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   Cards / grids
+   ========================================================================== */
+.grid { display: grid; gap: 1.5rem; }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.grid-split { grid-template-columns: 1.2fr 1fr; gap: 2.5rem; align-items: start; }
+@media (max-width: 760px) { .grid-split { grid-template-columns: 1fr; } }
+.card {
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow);
+}
+.card h3 { margin-top: 0; }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+.form { display: grid; gap: 1.1rem; max-width: 560px; }
+.field { display: grid; gap: 0.4rem; }
+.field label { font-weight: 600; font-size: 0.95rem; }
+.field input, .field textarea, .field select {
+  font: inherit; color: inherit; padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-surface); width: 100%;
+}
+.field textarea { min-height: 130px; resize: vertical; }
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: 2px solid var(--color-accent); outline-offset: 1px; border-color: transparent;
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+.form-note { font-size: var(--fs-small); color: var(--color-ink-soft); }
+.form-status { font-weight: 600; }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer {
+  border-top: 1px solid var(--color-line);
+  background: var(--color-surface);
+  padding-block: 2.5rem;
+  margin-top: 2rem;
+}
+.footer-inner { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+.footer-inner p { margin: 0; color: var(--color-ink-soft); font-size: var(--fs-small); }
+.footer-links { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+.footer-links a { color: var(--color-ink-soft); }
+
+/* --- Utility --- */
+.mt-0 { margin-top: 0; }
+.stack > * + * { margin-top: 1rem; }
+.hidden { display: none !important; }

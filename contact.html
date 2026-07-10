@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Sasha's Bakeshop</title>
+  <meta name="description" content="Get in touch with Sasha's Bakeshop." />
+  <link rel="icon" href="assets/logo.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Sasha's Bakeshop — home">
+        <img src="assets/logo.svg" alt="" />
+        <span class="brand-name">Sasha's Bakeshop</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="preorder.html">Preorder</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="is-active">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="section container">
+      <span class="eyebrow">Contact</span>
+      <h1 class="mt-0">Say hello</h1>
+      <p class="lead">Questions, custom orders, or wholesale enquiries — drop us a line and we'll get back to you.</p>
+
+      <div class="grid grid-split" style="margin-top:2rem">
+        <form class="form" data-form>
+          <div class="field">
+            <label for="cname">Name</label>
+            <input id="cname" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="cemail">Email</label>
+            <input id="cemail" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="cmessage">Message</label>
+            <textarea id="cmessage" name="message" required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="card">
+          <h3 class="mt-0">Reach us</h3>
+          <p class="stack">
+            <strong>Email</strong><br />
+            <a href="mailto:hello@sashasbakeshop.com">hello@sashasbakeshop.com</a>
+          </p>
+          <p>
+            <strong>Hours</strong><br />
+            Pickup by preorder<br />
+            [Add your days &amp; times]
+          </p>
+          <p>
+            <strong>Find us</strong><br />
+            [Add your location / neighborhood]
+          </p>
+          <p>
+            <strong>Social</strong><br />
+            [Add Instagram / other links]
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Sasha's Bakeshop. Baked with love.</p>
+      <ul class="footer-links">
+        <li><a href="preorder.html">Preorder</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
