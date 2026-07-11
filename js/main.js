@@ -24,8 +24,7 @@ var SB = {
     'the newsletter gets the menu first'
   ],
   // Now spinning: the kitchen soundtrack (design handoff 2c list).
-  // TODO: swap in the real playlist URL from Sasha.
-  playlistUrl: 'https://open.spotify.com/playlist/sashas-baking-mix',
+  playlistUrl: 'https://open.spotify.com/playlist/1JM6qLPBChNXCUC1UqeTYk?si=640780ce951c4c71',
   playlist: [
     'Sunday Kind of Love · Etta James',
     'Dream a Little Dream · Ella Fitzgerald',
