@@ -4,11 +4,16 @@ Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Pl
 
 ## Pages
 - `index.html` — Home: hero, mainstays marquee, menu cards, signup, how it works
-- `preorder.html` — This week's bakes: quantity steppers, live stock labels, cart bar
+- `preorder.html` — This week's bakes: quantity steppers, live stock labels, cart bar with order minimum, flip OPEN/CLOSED sign
+- `checkout.html` — Order flow: contact details, pickup or delivery (with delivery minimum), order summary; places the order via the visitor's email app for now
 - `about.html` — Sasha's story
 - `contact.html` — Contact cards + "drop a note" form (opens visitor's email app)
+- `journal.html` + `posts/` — Blog for SEO and newsletter content; copy `posts/hello-from-the-oven.html` as the template for new posts
 
 The logo (top-left, every page) links back to Home.
+
+## Shop config
+Top of `js/main.js`: `SB.ordersOpen` (drives the flip sign + open/closed favicon), `SB.orderMin`, `SB.deliveryMin`. Cart hands off to checkout via localStorage.
 
 ## Run it locally
 ```bash
@@ -30,6 +35,6 @@ Design tokens live in the `:root` block of `css/styles.css`:
 - Favicon (`assets/favicon.svg`) — swap for dog logo when ready
 
 ## Not wired up yet (frontend stubs, marked TODO in `js/main.js`)
-- **Preorder checkout** — cart works client-side; checkout button is a demo stub. Plan: Hotplate link or custom Stripe checkout (see conversation notes).
+- **Online payment** — orders currently arrive by email; payment settled at pickup/delivery. Next step: Stripe Checkout + a small backend (Supabase/Firebase) for real inventory.
 - **"Never miss a bake" signup** — needs an SMS/email marketing backend (Mailchimp, Klaviyo, Postscript).
-- Preorder stock counts + orders-open status are hardcoded in `preorder.html` / `js/main.js`.
+- Stock counts, orders-open status, and minimums are hardcoded in `preorder.html` / `js/main.js` (`SB` config).

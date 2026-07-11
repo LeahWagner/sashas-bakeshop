@@ -47,6 +47,8 @@ img { display: block; max-width: 100%; }
 a { color: var(--red); }
 a:hover, button:hover { opacity: .85; }
 
+.hidden { display: none !important; }
+
 /* Display-type helper: Hot House, uppercase */
 .display {
   font-family: var(--font-display);
@@ -93,6 +95,15 @@ a:hover, button:hover { opacity: .85; }
 }
 .btn-md { font-size: 14px; padding: 15px 30px; }
 
+/* Hover: red buttons flip to ink, ink buttons flip to red (no dim) */
+.btn, .nav-links .btn-nav, .signup-form button, .cart-bar .checkout, .note-fields button {
+  transition: background-color .18s ease, color .18s ease;
+}
+.btn:hover, .nav-links .btn-nav:hover, .signup-form button:hover, .cart-bar .checkout:hover:not([disabled]) {
+  background: var(--ink); color: var(--cream); opacity: 1;
+}
+.note-fields button:hover { background: var(--red); color: var(--cream); opacity: 1; }
+
 /* ==========================================================================
    Header bands (About / Contact / Preorder)
    ========================================================================== */
@@ -103,6 +114,7 @@ a:hover, button:hover { opacity: .85; }
 .band-mustard { background: var(--mustard); }
 .band-plum { background: var(--plum); color: var(--cream); }
 .band-red { background: var(--red); color: var(--cream); }
+.band-olive { background: var(--olive); color: var(--cream); }
 
 /* ==========================================================================
    Home: hero
@@ -259,9 +271,35 @@ a:hover, button:hover { opacity: .85; }
   display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
 }
 .preorder-band p { max-width: 480px; }
-.status-chip {
-  background: var(--cream); color: var(--ink); border-radius: 8px; padding: 12px 20px;
-  font: 700 13px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
+/* Hanging flip shop sign (OPEN / CLOSED), driven by js/main.js */
+.flip-sign {
+  position: relative;
+  margin-top: 20px;
+  background: var(--cream); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 10px;
+  padding: 13px 26px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  transform-origin: 50% -20px;
+  animation: sign-flip .7s ease-out both, sign-swing 4.5s ease-in-out .7s infinite;
+}
+.flip-sign::before { /* string */
+  content: ""; position: absolute; top: -20px; left: 50%;
+  width: 2px; height: 20px; margin-left: -1px; background: var(--ink);
+}
+.flip-sign::after { /* nail head */
+  content: ""; position: absolute; top: -24px; left: 50%;
+  width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--ink);
+}
+.flip-sign-word { font: 700 20px var(--font-display); letter-spacing: 2.5px; text-transform: uppercase; }
+.flip-sign-sub { font: 600 11px var(--font-body); opacity: .7; }
+.flip-sign.is-closed { background: var(--ink); color: var(--cream); }
+@keyframes sign-flip {
+  from { transform: rotateX(88deg); opacity: 0; }
+  to   { transform: rotateX(0deg); opacity: 1; }
+}
+@keyframes sign-swing {
+  0%, 100% { rotate: -2.5deg; }
+  50%      { rotate: 2.5deg; }
 }
 
 .order-grid {
@@ -308,6 +346,77 @@ a:hover, button:hover { opacity: .85; }
 }
 .order-fine-print { grid-column: 1 / -1; font: 400 12.5px/1.6 var(--font-body); opacity: .65; text-align: center; }
 .order-fine-print a { color: var(--red); font-weight: 600; }
+.cart-note { font: 600 12px var(--font-body); color: var(--mustard); margin-top: 6px; }
+.cart-bar .checkout[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* ==========================================================================
+   Journal (blog)
+   ========================================================================== */
+.journal-list {
+  max-width: 760px; width: 100%; margin: 0 auto; padding: 56px var(--gutter);
+  display: flex; flex-direction: column; gap: 22px;
+}
+.post-card { border: 2px solid var(--ink); border-radius: 12px; padding: 26px 28px; background: var(--surface); }
+.post-card .post-date { font: 700 11.5px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+.post-card h2 { font: 700 19px var(--font-display); letter-spacing: 1px; text-transform: uppercase; margin: 0 0 10px; }
+.post-card h2 a { color: var(--ink); text-decoration: none; }
+.post-card h2 a:hover { color: var(--red); opacity: 1; }
+.post-card p { font: 400 14.5px/1.65 var(--font-body); margin: 0 0 12px; opacity: .85; }
+.post-card .read-more { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; }
+.journal-newsletter { max-width: 760px; margin: 0 auto; padding: 0 var(--gutter) 56px; }
+.journal-newsletter .signup-card { margin-top: 0; }
+
+.post-body { max-width: 680px; width: 100%; margin: 0 auto; padding: 56px var(--gutter); }
+.post-body p { font: 400 15.5px/1.75 var(--font-body); margin: 0 0 18px; }
+.post-body .back-link { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: inline-block; margin-bottom: 8px; }
+
+/* ==========================================================================
+   Checkout
+   ========================================================================== */
+.checkout-grid {
+  max-width: var(--maxw-narrow); width: 100%; margin: 0 auto; padding: 56px var(--gutter);
+  display: grid; grid-template-columns: 1.1fr .9fr; gap: 52px; align-items: start;
+}
+.checkout-form { border: 2px solid var(--ink); border-radius: 12px; padding: 32px; background: var(--surface); }
+.checkout-form h2 { font: 700 16px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 18px; }
+.checkout-fields { display: flex; flex-direction: column; gap: 14px; }
+.checkout-fields label { font: 600 12.5px var(--font-body); display: block; margin-bottom: 5px; }
+.checkout-fields input[type="text"], .checkout-fields input[type="email"],
+.checkout-fields input[type="tel"], .checkout-fields textarea {
+  font: 400 14px var(--font-body); padding: 14px 16px;
+  border: 2px solid var(--ink); border-radius: 8px;
+  background: var(--cream); color: var(--ink); width: 100%; resize: vertical;
+}
+.fulfillment { display: flex; flex-direction: column; gap: 10px; }
+.checkout-fields label.fulfillment-option {
+  display: flex; gap: 12px; align-items: flex-start;
+  border: 2px solid var(--ink); border-radius: 8px; padding: 14px 16px;
+  background: var(--cream); cursor: pointer; margin-bottom: 0;
+  font: 400 12.5px var(--font-body);
+}
+.fulfillment-option input[type="radio"] { accent-color: var(--red); margin-top: 3px; width: auto; }
+.fulfillment-option .opt-title { font: 700 13px var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
+.fulfillment-option .opt-sub { font: 400 12.5px/1.5 var(--font-body); opacity: .7; }
+.checkout-fields label.fulfillment-option:has(input:checked) { background: var(--mustard); }
+.checkout-form .btn { width: 100%; text-align: center; margin-top: 4px; }
+.form-notice { font: 600 12.5px var(--font-body); color: var(--red); }
+
+.summary-card { background: var(--ink); color: var(--cream); border-radius: 12px; padding: 28px 30px; }
+.summary-card h2 { font: 700 15px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 16px; }
+.summary-lines { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.summary-line { display: flex; justify-content: space-between; gap: 12px; font: 400 14px var(--font-body); }
+.summary-line span:last-child { font-weight: 700; white-space: nowrap; }
+.summary-total {
+  display: flex; justify-content: space-between; border-top: 2px solid rgba(250, 243, 227, .25);
+  padding-top: 14px; font: 700 18px var(--font-body);
+}
+.summary-card .edit-link { font: 600 13px var(--font-body); color: var(--mustard); }
+.confirm-card {
+  border: 2px solid var(--ink); border-radius: 12px; padding: 40px 32px; background: var(--mustard);
+  text-align: center; max-width: 640px; margin: 0 auto;
+}
+.confirm-card h2 { font: 700 24px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 12px; }
+.confirm-card p { font: 400 15px/1.7 var(--font-body); margin: 0 0 10px; }
 
 /* ==========================================================================
    Footer
@@ -333,7 +442,7 @@ a:hover, button:hover { opacity: .85; }
   .hero-panel { min-height: 280px; }
   .menu-grid { grid-template-columns: 1fr 1fr; }
   .how-grid { grid-template-columns: 1fr; gap: 20px; }
-  .story, .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+  .story, .contact-grid, .checkout-grid { grid-template-columns: 1fr; gap: 36px; }
   .order-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
@@ -344,4 +453,5 @@ a:hover, button:hover { opacity: .85; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .flip-sign { animation: none; }
 }

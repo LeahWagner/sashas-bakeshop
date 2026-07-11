@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preorder | Sasha's Bakeshop</title>
-  <meta name="description" content="This week's bakes from Sasha's Bakeshop. Orders open Thursday 9am, pickup Saturday 9am to noon in SE Portland." />
+  <title>Preorder | sasha's bakeshop</title>
+  <meta name="description" content="This week's bakes from sasha's bakeshop. Orders open Thursday 9am, pickup Saturday 9am to noon in SE Portland." />
   <link rel="icon" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=4" />
 </head>
 <body>
   <header class="nav">
@@ -30,9 +30,12 @@
       <div class="band-inner">
         <div>
           <h1>This week's bakes</h1>
-          <p>Orders open Thursday 9am. Pickup Saturday 9am to noon in SE Portland.</p>
+          <p>Orders open Thursday 9am. Pickup Saturday 9am to noon in SE Portland, or delivery on bigger boxes.</p>
         </div>
-        <div class="status-chip" id="status-chip">✶ Orders open</div>
+        <div class="flip-sign" id="status-sign">
+          <span class="flip-sign-word">Open</span>
+          <span class="flip-sign-sub">this week's bakes are live</span>
+        </div>
       </div>
     </div>
 
@@ -119,6 +122,7 @@
         <div>
           <div class="cart-label" id="cart-label">Your box is empty</div>
           <div class="cart-sub" id="cart-sub">Add something little (or a lot).</div>
+          <div class="cart-note" id="cart-note"></div>
         </div>
         <div class="cart-right">
           <div class="cart-total" id="cart-total">$0</div>
@@ -136,10 +140,11 @@
       <span>SE Portland, OR</span>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="journal.html">Journal</a>
       <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">@sashas.bakeshop</a>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=4"></script>
 </body>
 </html>
