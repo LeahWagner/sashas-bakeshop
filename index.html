@@ -3,73 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sasha's Bakeshop — Handmade microbakery</title>
-  <meta name="description" content="Sasha's Bakeshop is a small-batch microbakery baking fresh breads and pastries to order." />
-  <link rel="icon" href="assets/logo.svg" />
+  <title>Sasha's Bakeshop | SE Portland home microbakery</title>
+  <meta name="description" content="A home microbakery in SE Portland baking small batches, fresh every Saturday. Preorder Thursdays, pickup Saturdays." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="index.html" aria-label="Sasha's Bakeshop — home">
-        <img src="assets/logo.svg" alt="" />
-        <span class="brand-name">Sasha's Bakeshop</span>
-      </a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="index.html" class="is-active">Home</a></li>
-        <li><a href="preorder.html">Preorder</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </div>
+  <header class="nav">
+    <a class="brand" href="index.html" aria-label="Sasha's Bakeshop, home">
+      <span class="stamp">dog<br />stamp</span>
+      <span class="brand-name">sasha's bakeshop</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="preorder.html" class="btn-nav">Preorder</a>
+    </nav>
   </header>
 
   <main>
-    <section class="hero container center">
-      <span class="eyebrow">Small-batch microbakery</span>
-      <h1>Fresh bread &amp; pastries,<br />baked to order.</h1>
-      <p class="lead">Sasha's Bakeshop is a tiny neighborhood bakery making everything by hand, in small batches. Reserve your favorites before they sell out.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="preorder.html">Start a preorder</a>
-        <a class="btn btn-ghost" href="about.html">Our story</a>
+    <!-- hero -->
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Small batches,<br />big flavor</h1>
+        <p class="hero-body">A home microbakery in SE Portland baking the flavors I wish I could find. Small batches, fresh every Saturday.</p>
+        <p class="hero-schedule">Preorder Thursdays → pickup Saturdays</p>
+        <a class="btn" href="preorder.html">Preorder now</a>
       </div>
-    </section>
-
-    <section class="section container">
-      <div class="grid grid-3">
-        <div class="card">
-          <h3>Baked fresh</h3>
-          <p>Every loaf and pastry is made the morning of pickup — never frozen, never rushed.</p>
-        </div>
-        <div class="card">
-          <h3>Small batches</h3>
-          <p>We bake limited quantities each week so quality stays high. Preorder to reserve yours.</p>
-        </div>
-        <div class="card">
-          <h3>Made by hand</h3>
-          <p>Slow-fermented doughs and simple, honest ingredients — the way baking should be.</p>
+      <div class="hero-art">
+        <div class="hero-panel">
+          <div class="hero-panel-title">[ Dog print ]</div>
+          <div class="hero-panel-note">artist's block print goes here:<br />pups + baguette, one color on dark</div>
         </div>
       </div>
     </section>
 
-    <section class="section container center">
-      <h2>Ready to order?</h2>
-      <p class="lead">Place a preorder for pickup and we'll have it fresh and waiting for you.</p>
-      <div class="hero-actions" style="margin-top:1.5rem">
-        <a class="btn btn-primary" href="preorder.html">Preorder now</a>
+    <!-- mainstays squiggle band -->
+    <div class="squiggle-band" aria-label="The mainstays">
+      <svg viewBox="0 0 1600 130" role="presentation">
+        <path id="mainstay-squiggle" d="M -200 65 Q -100 20, 0 65 T 200 65 T 400 65 T 600 65 T 800 65 T 1000 65 T 1200 65 T 1400 65 T 1600 65 T 1800 65 T 2000 65" fill="none" stroke="#e6a832" stroke-width="48" stroke-linecap="round"></path>
+        <text dominant-baseline="central">
+          <textPath id="mainstay-tp" href="#mainstay-squiggle" startOffset="0">The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays</textPath>
+        </text>
+      </svg>
+    </div>
+
+    <!-- menu cards -->
+    <section class="menu-grid">
+      <div class="menu-card card-red">
+        <img src="assets/cookie-broken.jpg" alt="Bibingka cookies" />
+        <h3>Bibingka cookies</h3>
+        <p>toasted banana leaf sugar · $4.50</p>
       </div>
+      <div class="menu-card card-mustard">
+        <img src="assets/cookie-melty.jpg" alt="Vegan tahini chocolate chip" />
+        <h3>Tahini choc chip</h3>
+        <p>vegan + fudgy · $4</p>
+      </div>
+      <div class="menu-card card-olive">
+        <div class="ph-tile ph-olive">[ coffee cake photo ]</div>
+        <h3>Hazelnut coffee cake</h3>
+        <p>oregon streusel · $6 / $32</p>
+      </div>
+      <div class="menu-card card-plum">
+        <div class="ph-tile ph-plum">[ milk rolls photo ]</div>
+        <h3>Black sesame rolls</h3>
+        <p>set of 4 · $14</p>
+      </div>
+
+      <!-- never miss a bake -->
+      <div class="signup-card">
+        <div class="signup-copy">
+          <h3>Never miss a bake</h3>
+          <p>Weekly specials drop alongside the mainstays. Get the menu by text or email before orders open Thursday.</p>
+        </div>
+        <form class="signup-form">
+          <input type="text" placeholder="Phone or email" aria-label="Phone or email" />
+          <button type="submit">Sign up</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- how it works -->
+    <section class="how-band">
+      <div class="how-inner">
+        <h2>How it works</h2>
+        <div class="how-grid">
+          <div>
+            <h3>1 · Order Thursday</h3>
+            <p>Preorders open 9am on Hotplate. Small batches, first come first served.</p>
+          </div>
+          <div>
+            <h3>2 · Wait patiently (or not)</h3>
+            <p>Everything comes out of the oven Saturday morning, the day of pickup. No day-olds, ever.</p>
+          </div>
+          <div>
+            <h3>3 · Pickup Saturday</h3>
+            <p>Porch pickup in SE Portland, 9am to noon. Address in your confirmation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- about teaser -->
+    <section class="teaser">
+      <div class="teaser-photo">sasha +<br />dogs<br />photo</div>
+      <div class="teaser-copy"><strong>Hi, I'm Sasha.</strong> I bake out of my SE Portland kitchen with two dogs underfoot. <a href="about.html">More about the bakeshop →</a></div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 Sasha's Bakeshop. Baked with love.</p>
-      <ul class="footer-links">
-        <li><a href="preorder.html">Preorder</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
+    <div class="footer-brand">sasha's bakeshop</div>
+    <div class="footer-links">
+      <span>SE Portland, OR</span>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">@sashas.bakeshop</a>
     </div>
   </footer>
 

@@ -3,68 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — Sasha's Bakeshop</title>
-  <meta name="description" content="The story behind Sasha's Bakeshop, a handmade small-batch microbakery." />
-  <link rel="icon" href="assets/logo.svg" />
+  <title>About | Sasha's Bakeshop</title>
+  <meta name="description" content="One baker, one home kitchen, two dogs. The story behind Sasha's Bakeshop, a licensed home microbakery in SE Portland." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="index.html" aria-label="Sasha's Bakeshop — home">
-        <img src="assets/logo.svg" alt="" />
-        <span class="brand-name">Sasha's Bakeshop</span>
-      </a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">☰</button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="preorder.html">Preorder</a></li>
-        <li><a href="about.html" class="is-active">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </div>
+  <header class="nav">
+    <a class="brand" href="index.html" aria-label="Sasha's Bakeshop, home">
+      <span class="stamp">dog<br />stamp</span>
+      <span class="brand-name">sasha's bakeshop</span>
+    </a>
+    <nav class="nav-links">
+      <a href="about.html" class="is-active">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="preorder.html" class="btn-nav">Preorder</a>
+    </nav>
   </header>
 
   <main>
-    <section class="section container">
-      <span class="eyebrow">About</span>
-      <h1 class="mt-0">Our story</h1>
-      <div class="stack" style="max-width:65ch">
-        <p class="lead">Sasha's Bakeshop started in a home kitchen with a simple idea: really good bread, made in small batches, for the neighborhood.</p>
-        <p>[Placeholder — this is where Sasha's story goes. Tell people how the bakery began, what makes it special, and the philosophy behind the bakes. We'll replace this copy once you share your vision.]</p>
-        <p>Everything is made by hand with slow fermentation, quality ingredients, and a lot of care. We keep batches small so every loaf that leaves the oven is one we're proud of.</p>
+    <!-- header band -->
+    <div class="band band-mustard">
+      <div class="band-inner">
+        <h1>About the bakeshop</h1>
+        <p>One baker, one home kitchen, two dogs.</p>
       </div>
+    </div>
 
-      <div class="grid grid-3" style="margin-top:2.5rem">
-        <div class="card">
-          <h3>Handmade</h3>
-          <p>No shortcuts — mixed, shaped, and baked by hand.</p>
-        </div>
-        <div class="card">
-          <h3>Local</h3>
-          <p>Baking for our community, one batch at a time.</p>
-        </div>
-        <div class="card">
-          <h3>Seasonal</h3>
-          <p>Menus that shift with the seasons and what's fresh.</p>
-        </div>
+    <!-- story -->
+    <section class="story">
+      <div>
+        <h2>Hi, I'm Sasha</h2>
+        <p>I've loved baking for as long as I can remember, and I spent a few years working in pastry before moving to Portland and finally opening a shop of my own. Sasha's Bakeshop is a licensed home microbakery in SE Portland, and everything is mixed, proofed, and baked in my kitchen, usually with two dogs stationed hopefully by the oven.</p>
+        <p>My favorite part of going somewhere new is ordering the thing I've never tried before. That's the fun I want to share here: bibingka cookies with toasted banana leaf sugar, black sesame milk rolls, coffee cake heavy with Oregon hazelnut streusel. Familiar enough to crave, different enough to surprise you.</p>
+        <p>Orders open every Thursday at 9am and everything is baked fresh Saturday morning. Specials rotate weekly, and the mainstays are always there.</p>
+        <a class="btn btn-md" href="preorder.html">Preorder now</a>
       </div>
-
-      <div class="hero-actions" style="margin-top:2.5rem">
-        <a class="btn btn-primary" href="preorder.html">Preorder a bake</a>
-        <a class="btn btn-ghost" href="contact.html">Get in touch</a>
+      <div class="story-photos">
+        <div class="framed framed-ph">[ photo of sasha + the dogs ]</div>
+        <img class="framed" src="assets/challah.jpg" alt="Fresh baked challah" />
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 Sasha's Bakeshop. Baked with love.</p>
-      <ul class="footer-links">
-        <li><a href="preorder.html">Preorder</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
+    <div class="footer-brand">sasha's bakeshop</div>
+    <div class="footer-links">
+      <span>SE Portland, OR</span>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">@sashas.bakeshop</a>
     </div>
   </footer>
 
