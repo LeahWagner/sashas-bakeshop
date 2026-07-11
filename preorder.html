@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=6" />
+  <link rel="stylesheet" href="css/styles.css?v=7" />
 </head>
 <body>
   <header class="nav">
@@ -20,6 +20,7 @@
     <nav class="nav-links">
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
       <a href="preorder.html" class="btn-nav">Preorder</a>
     </nav>
   </header>
@@ -33,8 +34,9 @@
           <p>Orders open Thursday 9am. Pickup Saturday 9am to noon in SE Portland, or delivery on bigger boxes.</p>
         </div>
         <div class="flip-sign" id="status-sign">
+          <span class="sign-nail"></span>
           <span class="flip-sign-word">Open</span>
-          <span class="flip-sign-sub">this week's bakes are live</span>
+          <span class="flip-sign-sub">orders are open</span>
         </div>
       </div>
     </div>
@@ -98,6 +100,25 @@
         </div>
       </div>
 
+      <div class="order-card" data-price="32" data-stock="2">
+        <div class="order-photo" style="background-color:#6f7d4a"><span>[ photo ]</span></div>
+        <div class="order-body">
+          <div class="order-title-row">
+            <h3>Whole coffee cake</h3>
+            <div class="order-price">$32</div>
+          </div>
+          <p class="order-desc">The whole thing, baked as an extra just for you. Serves 8 to 10.</p>
+          <div class="order-foot">
+            <div class="stock-label"></div>
+            <div class="stepper">
+              <button type="button" class="minus" aria-label="Remove one">−</button>
+              <span class="qty">0</span>
+              <button type="button" class="plus" aria-label="Add one">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="order-card" data-price="14" data-stock="3">
         <div class="order-photo" style="background-color:#9a6fa0"><span>[ photo ]</span></div>
         <div class="order-body">
@@ -134,18 +155,45 @@
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-brand">sasha's bakeshop</div>
-    <div class="footer-links">
-      <span>SE Portland, OR</span>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="journal.html">Journal</a>
-      <a href="faq.html">FAQ</a>
-      <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">@sashas.bakeshop</a>
+  <footer class="mega-footer">
+    <div class="footer-top">
+      <div class="footer-signup">
+        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland home kitchen every Saturday.</p>
+        <p class="footer-label">Email</p>
+        <form class="signup-form footer-form">
+          <input type="email" placeholder="Your email" aria-label="Email address" />
+          <button type="submit">Sign up</button>
+        </form>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <h4>Shop</h4>
+          <a href="preorder.html">This week's bakes</a>
+          <a href="products/bibingka-cookies.html">Bibingka cookies</a>
+          <a href="products/tahini-chocolate-chunk.html">Tahini chocolate chunk</a>
+          <a href="products/hazelnut-coffee-cake.html">Hazelnut coffee cake</a>
+          <a href="products/black-sesame-rolls.html">Black sesame rolls</a>
+        </div>
+        <div>
+          <h4>Bakeshop</h4>
+          <a href="about.html">About</a>
+          <a href="journal.html">Journal</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Social</h4>
+          <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
     </div>
+    <div class="footer-legal">
+      <span>SE Portland, OR</span>
+      <span>&copy; sasha's bakeshop 2026</span>
+    </div>
+    <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>

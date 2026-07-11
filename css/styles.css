@@ -163,21 +163,6 @@ a:hover, button:hover { opacity: .85; }
   font: 700 26px var(--font-display); letter-spacing: 5px; text-transform: uppercase;
   fill: var(--ink);
 }
-/* Marquee: the whole track (wave + text) slides exactly 600 user units left,
-   which is 3 wave periods AND (after JS letter-spacing calibration) exactly one
-   text phrase unit, so the loop restart is pixel-identical. GPU transform, no
-   per-frame layout. JS adds .is-animating once calibrated. */
-#squiggle-track.is-animating {
-  animation: squiggle-scroll 13.333s linear infinite;
-  will-change: transform;
-}
-@keyframes squiggle-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-600px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  #squiggle-track.is-animating { animation: none; }
-}
 
 /* ==========================================================================
    Home: menu cards
@@ -331,13 +316,17 @@ a.menu-card:hover {
   transform-origin: 50% -20px;
   animation: sign-flip .7s ease-out both, sign-swing 4.5s ease-in-out .7s infinite;
 }
-.flip-sign::before { /* string */
-  content: ""; position: absolute; top: -20px; left: 50%;
-  width: 2px; height: 20px; margin-left: -1px; background: var(--ink);
+.flip-sign::before, .flip-sign::after { /* two strings from the nail down to the board */
+  content: ""; position: absolute; top: -21px; left: 50%;
+  width: 2px; height: 72px; margin-left: -1px; background: var(--ink);
+  transform-origin: top center; z-index: -1;
 }
-.flip-sign::after { /* nail head */
-  content: ""; position: absolute; top: -24px; left: 50%;
-  width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--ink);
+.flip-sign::before { transform: rotate(64deg); }
+.flip-sign::after { transform: rotate(-64deg); }
+.sign-nail { /* nail head the sign hangs from */
+  position: absolute; top: -27px; left: 50%;
+  width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
+  background: var(--ink); box-shadow: inset 1.5px 1.5px 0 rgba(250, 243, 227, .35);
 }
 .flip-sign-word { font: 700 21px var(--font-display); letter-spacing: 2.5px; text-transform: uppercase; text-shadow: 1.5px 1.5px 0 rgba(51, 48, 42, .18); }
 .flip-sign-word::before { content: "✶ "; font-size: 14px; vertical-align: 3px; }
@@ -431,10 +420,32 @@ a.menu-card:hover {
   display: grid; grid-template-columns: .9fr 1.1fr; gap: 52px; align-items: start;
 }
 .product-grid .framed { aspect-ratio: 1; }
-.product-price { font: 700 20px var(--font-body); color: var(--red); margin: 0 0 18px; }
+.product-price {
+  display: inline-block; font: 700 24px var(--font-body); color: var(--cream);
+  background: var(--red); border-radius: 8px; padding: 8px 18px; margin: 0 0 20px;
+}
 .product-copy p { font: 400 15.5px/1.75 var(--font-body); margin: 0 0 18px; }
-.product-meta { font: 600 12.5px var(--font-body); opacity: .65; margin: 0 0 26px; }
-.back-to-menu { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: inline-block; margin-bottom: 14px; }
+.product-meta { font: 600 12.5px var(--font-body); opacity: .65; margin: 0 0 18px; }
+.back-to-menu { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: block; margin-bottom: 16px; }
+
+/* Ingredients + allergens dropdown */
+.product-info { border: 2px solid var(--ink); border-radius: 12px; background: var(--surface); margin: 0 0 26px; max-width: 520px; }
+.product-info summary {
+  cursor: pointer; padding: 14px 18px; list-style: none;
+  font: 700 12.5px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.product-info summary::-webkit-details-marker { display: none; }
+.product-info summary::after { content: "+"; font: 700 18px var(--font-body); color: var(--red); flex: none; }
+.product-info[open] summary::after { content: "−"; }
+.product-info[open] summary { border-bottom: 2px solid var(--ink); }
+.product-info .faq-answer p { font: 400 13.5px/1.7 var(--font-body); }
+
+/* Notify-me form shown when orders are closed */
+.notify-wrap { max-width: 520px; }
+.notify-copy { font: 600 14px/1.6 var(--font-body); color: var(--red); margin: 0 0 12px; }
+.notify-form input { border: 2px solid var(--ink); }
+
 @media (max-width: 900px) { .product-grid { grid-template-columns: 1fr; gap: 32px; } }
 
 /* ==========================================================================
@@ -530,17 +541,47 @@ a.menu-card:hover {
 .confirm-card p { font: 400 15px/1.7 var(--font-body); margin: 0 0 10px; }
 
 /* ==========================================================================
-   Footer
+   Footer (mega wordmark style)
    ========================================================================== */
-.site-footer {
-  border-top: 2px solid var(--ink); background: var(--ink); color: var(--cream);
-  padding: 24px var(--gutter);
-  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-  margin-top: auto;
+.mega-footer {
+  border-top: 2px solid var(--ink); background: var(--cream);
+  padding: 52px var(--gutter) 0; margin-top: auto; overflow: hidden;
 }
-.footer-brand { font: 700 14px var(--font-display); font-variant-ligatures: contextual; }
-.footer-links { display: flex; gap: 24px; font: 600 13px var(--font-body); align-items: center; flex-wrap: wrap; }
-.footer-links a { text-decoration: none; color: var(--cream); }
+.footer-top {
+  max-width: var(--maxw); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.3fr; gap: 48px;
+  padding-bottom: 44px;
+}
+.footer-tag { font: 400 15px/1.65 var(--font-body); max-width: 340px; margin: 0 0 30px; }
+.footer-label { font: 600 12.5px var(--font-body); margin: 0 0 6px; }
+.footer-form input { border: 2px solid var(--ink); background: var(--surface); }
+.footer-cols {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  border-left: 2px dotted rgba(51, 48, 42, .5); padding-left: 48px;
+}
+.footer-cols h4 { font: 700 14.5px var(--font-body); margin: 0 0 16px; }
+.footer-cols a { display: block; font: 500 14px var(--font-body); color: var(--ink); text-decoration: none; margin-bottom: 12px; }
+.footer-cols a:hover { color: var(--red); opacity: 1; }
+.footer-legal {
+  max-width: var(--maxw); margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 0 0 20px; border-bottom: 2px dotted rgba(51, 48, 42, .5);
+  font: 600 13px var(--font-body);
+}
+.mega-brand {
+  /* "sasha's" is 5.5em wide in Hot House; 18vw fills the viewport edge to edge */
+  font: 700 18vw/0.82 var(--font-display);
+  font-variant-ligatures: contextual;
+  color: var(--ink); text-align: center; white-space: nowrap;
+  margin: 26px calc(var(--gutter) * -1) -0.1em; user-select: none;
+}
+@media (max-width: 900px) {
+  .footer-top { grid-template-columns: 1fr; gap: 36px; }
+  .footer-cols { border-left: none; padding-left: 0; border-top: 2px dotted rgba(51, 48, 42, .5); padding-top: 32px; }
+}
+@media (max-width: 560px) {
+  .footer-cols { grid-template-columns: 1fr 1fr; }
+}
 
 /* ==========================================================================
    Responsive (design is desktop-first at 1200px; stack below)

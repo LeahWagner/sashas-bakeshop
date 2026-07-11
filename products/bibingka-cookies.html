@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css?v=6" />
+  <link rel="stylesheet" href="../css/styles.css?v=7" />
 </head>
 <body>
   <header class="nav">
@@ -20,6 +20,7 @@
     <nav class="nav-links">
       <a href="../about.html">About</a>
       <a href="../contact.html">Contact</a>
+      <a href="../faq.html">FAQ</a>
       <a href="../preorder.html" class="btn-nav">Preorder</a>
     </nav>
   </header>
@@ -39,24 +40,67 @@
         <p class="product-price">$4.50 each</p>
         <p>Bibingka is a Filipino coconut rice cake, traditionally baked in banana leaves until the edges char and the sugars toast. This cookie is my love letter to it: chewy coconut and rice flour, rich salted coconut milk, and a sprinkle of sugar that's been slow-toasted on real banana leaf until it tastes warm and a little smoky.</p>
         <p>It's soft in the middle, crisp at the edge, and tastes like nothing else at the Saturday table. If it's your first order, start here.</p>
-        <p class="product-meta">Made with rice flour + coconut · contains dairy and egg · baked fresh Saturday morning</p>
-        <a class="btn btn-md" href="../preorder.html">Preorder this</a>
+        <p class="product-meta">Baked fresh Saturday morning · [ ingredients below are a draft, Sasha please confirm! ]</p>
+        <details class="product-info">
+          <summary>Ingredients + allergens</summary>
+          <div class="faq-answer">
+            <p><strong>Ingredients:</strong> rice flour, coconut milk, butter, sugar (toasted on banana leaf), eggs, shredded coconut, baking powder, salt.</p>
+            <p><strong>Allergens:</strong> dairy, egg, coconut. Baked in a home kitchen that also handles wheat, sesame, and tree nuts. Cross-contact is always possible.</p>
+          </div>
+        </details>
+        <div class="product-cta">
+          <a class="btn btn-md" href="../preorder.html">Snag one</a>
+        </div>
+        <div class="notify-wrap hidden">
+          <p class="notify-copy">Orders are closed right now. Want a heads up when they open Thursday 9am?</p>
+          <form class="signup-form notify-form">
+            <input type="email" placeholder="Email address" aria-label="Email address" />
+            <button type="submit">Notify me</button>
+          </form>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-brand">sasha's bakeshop</div>
-    <div class="footer-links">
-      <span>SE Portland, OR</span>
-      <a href="../about.html">About</a>
-      <a href="../contact.html">Contact</a>
-      <a href="../journal.html">Journal</a>
-      <a href="../faq.html">FAQ</a>
-      <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">@sashas.bakeshop</a>
+  <footer class="mega-footer">
+    <div class="footer-top">
+      <div class="footer-signup">
+        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland home kitchen every Saturday.</p>
+        <p class="footer-label">Email</p>
+        <form class="signup-form footer-form">
+          <input type="email" placeholder="Your email" aria-label="Email address" />
+          <button type="submit">Sign up</button>
+        </form>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <h4>Shop</h4>
+          <a href="../preorder.html">This week's bakes</a>
+          <a href="../products/bibingka-cookies.html">Bibingka cookies</a>
+          <a href="../products/tahini-chocolate-chunk.html">Tahini chocolate chunk</a>
+          <a href="../products/hazelnut-coffee-cake.html">Hazelnut coffee cake</a>
+          <a href="../products/black-sesame-rolls.html">Black sesame rolls</a>
+        </div>
+        <div>
+          <h4>Bakeshop</h4>
+          <a href="../about.html">About</a>
+          <a href="../journal.html">Journal</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Social</h4>
+          <a href="https://instagram.com/sashas.bakeshop" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
     </div>
+    <div class="footer-legal">
+      <span>SE Portland, OR</span>
+      <span>&copy; sasha's bakeshop 2026</span>
+    </div>
+    <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="../js/main.js?v=6"></script>
+  <script src="../js/main.js?v=7"></script>
 </body>
 </html>

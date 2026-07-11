@@ -5,7 +5,7 @@ Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Pl
 ## Pages
 - `index.html` — Home: hero photo carousel, mainstays marquee, clickable menu cards, signup, how it works
 - `preorder.html` — This week's bakes: quantity steppers, live stock labels, cart bar with order minimum, woodcut OPEN/SOLD OUT flip sign; checkout goes to the Stripe Payment Link (all orders prepaid)
-- `products/` — One page per bake; menu cards on Home link here
+- `products/` — One page per bake with ingredients/allergens dropdown (DRAFT lists, Sasha must confirm) and a Snag CTA that flips to a notify-me email form when orders close
 - `about.html` — Sasha's story (dog disclaimer footnote included)
 - `contact.html` — Contact cards + "drop a note" form (opens visitor's email app)
 - `faq.html` — Accordion FAQ (ordering, pickup, minimums, allergens, dogs, policies)
@@ -18,8 +18,8 @@ Top of `js/main.js`: `SB.ordersOpen` (drives the flip sign + open/closed favicon
 
 ## Stripe (sandbox for now)
 Account: Sasha's Bakeshop sandbox (`acct_1Trpw1D8gu8vcOCx`). Created via API:
-- Products + prices: Bibingka cookies $4.50, Tahini choc chip $4, Hazelnut coffee cake slice $6, Black sesame rolls (set of 4) $14 — each carries `metadata.slug` and `metadata.weekly_stock`
-- Weekly-drop Payment Link (`plink_1Trq6TD8gu8vcOCxEE7R1Uay`): all four items with adjustable quantities capped at weekly stock, pickup/delivery dropdown, delivery-address + notes fields, phone collection, minimums in the submit text, custom confirmation message
+- Products + prices: Bibingka cookies $4.50, Tahini chocolate chunk $4, Hazelnut coffee cake slice $6, Whole hazelnut coffee cake $32, Black sesame rolls (set of 4) $14 — each carries `metadata.slug` and `metadata.weekly_stock`
+- Weekly-drop Payment Link (`plink_1TrtihD8gu8vcOCx3Pm0SUJR`): all five items (incl. whole coffee cake) with adjustable quantities capped at weekly stock, pickup/delivery dropdown, delivery-address + notes fields, phone collection, minimums in the submit text, custom confirmation message. Old link `plink_1Trq6T...` deactivated.
 
 "Check out" sends the customer to the Payment Link; quantities are confirmed on Stripe's page. The email-order path (`checkout.html`, pay at pickup) remains as fallback, linked from the preorder fine print.
 
