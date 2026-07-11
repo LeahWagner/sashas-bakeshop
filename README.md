@@ -24,6 +24,9 @@ Account: Sasha's Bakeshop sandbox (`acct_1Trpw1D8gu8vcOCx`). Created via API:
 
 **Going live checklist:** activate the real Stripe account, recreate products + payment link in live mode (or use the dashboard's "copy to live mode"), then swap `SB.paymentLink`. Test with card 4242 4242 4242 4242 in sandbox first.
 
+## Hosting
+Live at **https://sashasbakeshop.com** — GitHub Pages from this repo (`main` branch root), deploys on every push. DNS is on Cloudflare: apex A records to GitHub (`185.199.108.153`, `185.199.109.153`) and `www` CNAME to `leahwagner.github.io`, all **DNS only** (grey cloud — keep it grey or GitHub's cert renewal breaks). HTTPS enforced, cert auto-renews.
+
 ## Run it locally
 ```bash
 python3 -m http.server 8000
