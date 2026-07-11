@@ -62,7 +62,7 @@ a:hover, button:hover { opacity: .85; }
 /* ==========================================================================
    Announcement ticker (injected above the header by js/main.js)
    ========================================================================== */
-.ticker { background: var(--ink); color: var(--cream); overflow: hidden; }
+.ticker { background: var(--plum); color: var(--cream); overflow: hidden; border-bottom: 2px solid var(--ink); }
 .ticker-track {
   display: inline-flex; align-items: center; white-space: nowrap;
   padding: 8px 0; animation: ticker-scroll 36s linear infinite; will-change: transform;
@@ -262,24 +262,39 @@ a.menu-card:hover {
 .teaser-copy a { color: var(--red); font-weight: 600; }
 
 /* ==========================================================================
-   Home: on the speaker (jukebox)
+   Home: now spinning (kitchen record player)
    ========================================================================== */
 .jukebox { border-top: 2px solid var(--ink); background: var(--mustard); }
 .jukebox-inner {
-  max-width: var(--maxw); margin: 0 auto; padding: 26px var(--gutter);
-  display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap;
+  max-width: var(--maxw); margin: 0 auto; padding: 34px var(--gutter);
+  display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap;
 }
-.jukebox-label { font: 700 13px var(--font-display); letter-spacing: 2px; text-transform: uppercase; }
-.jukebox-song { font: 600 15px var(--font-body); }
-.jukebox-note { display: inline-block; margin-right: 4px; animation: note-bob 1.6s ease-in-out infinite; }
-@keyframes note-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.vinyl {
+  width: 96px; height: 96px; border-radius: 50%; flex: none;
+  background: repeating-radial-gradient(circle at 50% 50%, #33302a 0 3px, #423e36 3px 5px);
+  border: 3px solid var(--ink);
+  box-shadow: 3px 4px 0 rgba(51, 48, 42, .3);
+  display: flex; align-items: center; justify-content: center;
+  animation: vinyl-spin 3.5s linear infinite;
+}
+.vinyl-label {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--red); border: 2px solid var(--cream);
+  display: flex; align-items: center; justify-content: center;
+}
+.vinyl-label::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cream); }
+@keyframes vinyl-spin { to { transform: rotate(360deg); } }
+.jukebox-copy { text-align: left; max-width: 460px; }
+.jukebox-label { font: 700 12px var(--font-display); letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.jukebox-song { font: 700 21px var(--font-display); letter-spacing: 1px; text-transform: uppercase; line-height: 1.25; }
+.jukebox-sub { font: 600 12.5px var(--font-body); opacity: .7; margin-top: 6px; }
 .jukebox-shuffle {
-  font: 700 11px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
-  background: var(--ink); color: var(--cream); border: none; border-radius: 6px;
-  padding: 9px 16px; cursor: pointer; transition: background-color .18s ease, color .18s ease;
+  font: 700 12px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
+  background: var(--ink); color: var(--cream); border: none; border-radius: 8px;
+  padding: 13px 20px; cursor: pointer; transition: background-color .18s ease, color .18s ease;
 }
 .jukebox-shuffle:hover { background: var(--red); color: var(--cream); opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .jukebox-note { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .vinyl { animation: none; } }
 
 /* ==========================================================================
    About page
