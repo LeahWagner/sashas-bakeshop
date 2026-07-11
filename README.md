@@ -9,6 +9,7 @@ Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Pl
 - `about.html` — Sasha's story (dog disclaimer footnote included)
 - `contact.html` — Contact cards + "drop a note" form (opens visitor's email app)
 - `faq.html` — Accordion FAQ (ordering, pickup, minimums, allergens, dogs, policies)
+- `privacy.html` — Plain-language privacy policy, linked from the footer legal row
 - `journal.html` + `posts/` — Blog for SEO and newsletter content; copy `posts/welcome-to-sashas-bakeshop.html` as the template for new posts
 
 The logo (top-left, every page) links back to Home. A mini open/sold-out sign is injected next to it by `js/main.js`, and the favicon flips to match.
@@ -51,3 +52,8 @@ Design tokens live in the `:root` block of `css/styles.css`:
 - **Online payment** — orders currently arrive by email; payment settled at pickup/delivery. Next step: Stripe Checkout + a small backend (Supabase/Firebase) for real inventory.
 - **"Never miss a bake" signup** — needs an SMS/email marketing backend (Mailchimp, Klaviyo, Postscript).
 - Stock counts, orders-open status, and minimums are hardcoded in `preorder.html` / `js/main.js` (`SB` config).
+
+## Handy tricks
+- Append `?preview=closed` to any page URL to preview the sold-out state (signs, favicon, notify-me forms) without changing config.
+- The announcement ticker, countdown, and jukebox playlist all live in the `SB` config at the top of `js/main.js`.
+- Marquee text is drawn on a canvas overlay (smooth in Safari); the SVG text underneath is the no-JS/reduced-motion fallback.

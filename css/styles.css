@@ -60,6 +60,22 @@ a:hover, button:hover { opacity: .85; }
 .container-narrow { max-width: var(--maxw-narrow); width: 100%; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
 
 /* ==========================================================================
+   Announcement ticker (injected above the header by js/main.js)
+   ========================================================================== */
+.ticker { background: var(--ink); color: var(--cream); overflow: hidden; }
+.ticker-track {
+  display: inline-flex; align-items: center; white-space: nowrap;
+  padding: 8px 0; animation: ticker-scroll 36s linear infinite; will-change: transform;
+}
+.ticker .msg {
+  font: 700 11px var(--font-display); letter-spacing: 2px; text-transform: uppercase;
+  margin: 0 22px; flex: none;
+}
+.ticker .tick-count { color: var(--mustard); }
+@keyframes ticker-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+/* ==========================================================================
    Nav
    ========================================================================== */
 .nav {
@@ -246,6 +262,26 @@ a.menu-card:hover {
 .teaser-copy a { color: var(--red); font-weight: 600; }
 
 /* ==========================================================================
+   Home: on the speaker (jukebox)
+   ========================================================================== */
+.jukebox { border-top: 2px solid var(--ink); background: var(--mustard); }
+.jukebox-inner {
+  max-width: var(--maxw); margin: 0 auto; padding: 26px var(--gutter);
+  display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap;
+}
+.jukebox-label { font: 700 13px var(--font-display); letter-spacing: 2px; text-transform: uppercase; }
+.jukebox-song { font: 600 15px var(--font-body); }
+.jukebox-note { display: inline-block; margin-right: 4px; animation: note-bob 1.6s ease-in-out infinite; }
+@keyframes note-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.jukebox-shuffle {
+  font: 700 11px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
+  background: var(--ink); color: var(--cream); border: none; border-radius: 6px;
+  padding: 9px 16px; cursor: pointer; transition: background-color .18s ease, color .18s ease;
+}
+.jukebox-shuffle:hover { background: var(--red); color: var(--cream); opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .jukebox-note { animation: none; } }
+
+/* ==========================================================================
    About page
    ========================================================================== */
 .story {
@@ -300,10 +336,29 @@ a.menu-card:hover {
   display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
 }
 .preorder-band p { max-width: 480px; }
-/* Hanging flip shop sign (OPEN / SOLD OUT), woodcut-stamp style, driven by js/main.js */
-.flip-sign {
+/* Hanging flip shop sign (OPEN / SOLD OUT), woodcut-stamp style, driven by js/main.js.
+   Structure: .sign-hanger (nail + strings, swings) > .flip-sign (board, flips on load).
+   The strings are pseudo-elements of the hanger so they paint BEHIND the board. */
+.sign-hanger {
   position: relative;
   margin-top: 22px;
+  transform-origin: 50% -22px;
+  animation: sign-swing 4.5s ease-in-out 1s infinite;
+}
+.sign-hanger::before, .sign-hanger::after { /* two strings from the nail down behind the board */
+  content: ""; position: absolute; top: -21px; left: 50%;
+  width: 2px; height: 72px; margin-left: -1px; background: var(--ink);
+  transform-origin: top center;
+}
+.sign-hanger::before { transform: rotate(64deg); }
+.sign-hanger::after { transform: rotate(-64deg); }
+.sign-nail { /* nail head the sign hangs from */
+  position: absolute; top: -27px; left: 50%;
+  width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
+  background: var(--ink); box-shadow: inset 1.5px 1.5px 0 rgba(250, 243, 227, .35);
+}
+.flip-sign {
+  position: relative;
   background:
     repeating-linear-gradient(94deg, rgba(51, 48, 42, .05) 0 2px, transparent 2px 9px),
     var(--cream);
@@ -314,24 +369,10 @@ a.menu-card:hover {
   box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 5px var(--ink), 3px 4px 0 rgba(51, 48, 42, .3);
   padding: 15px 30px 13px;
   display: flex; flex-direction: column; align-items: center; gap: 1px;
-  transform-origin: 50% -20px;
-  animation: sign-flip .7s ease-out both, sign-swing 4.5s ease-in-out .7s infinite;
-}
-.flip-sign::before, .flip-sign::after { /* two strings from the nail down to the board */
-  content: ""; position: absolute; top: -21px; left: 50%;
-  width: 2px; height: 72px; margin-left: -1px; background: var(--ink);
-  transform-origin: top center; z-index: -1;
-}
-.flip-sign::before { transform: rotate(64deg); }
-.flip-sign::after { transform: rotate(-64deg); }
-.sign-nail { /* nail head the sign hangs from */
-  position: absolute; top: -27px; left: 50%;
-  width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
-  background: var(--ink); box-shadow: inset 1.5px 1.5px 0 rgba(250, 243, 227, .35);
+  transform-origin: 50% -22px;
+  animation: sign-flip .9s ease-out both;
 }
 .flip-sign-word { font: 700 21px var(--font-display); letter-spacing: 2.5px; text-transform: uppercase; text-shadow: 1.5px 1.5px 0 rgba(51, 48, 42, .18); }
-.flip-sign-word::before { content: "✶ "; font-size: 14px; vertical-align: 3px; }
-.flip-sign-word::after { content: " ✶"; font-size: 14px; vertical-align: 3px; }
 .flip-sign-sub { font: 600 11px var(--font-body); opacity: .7; }
 .flip-sign.is-closed {
   background:
@@ -357,9 +398,11 @@ a.menu-card:hover {
 }
 .mini-sign:hover { text-decoration: none; rotate: 2deg; }
 .mini-sign.is-closed { background: var(--ink); color: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink), inset 0 0 0 2.5px var(--cream); }
-@keyframes sign-flip {
-  from { transform: rotateX(88deg); opacity: 0; }
-  to   { transform: rotateX(0deg); opacity: 1; }
+@keyframes sign-flip { /* flips to its current state on landing, with a little settle */
+  0%   { transform: rotateX(90deg); opacity: 0; }
+  55%  { transform: rotateX(-12deg); opacity: 1; }
+  78%  { transform: rotateX(6deg); }
+  100% { transform: rotateX(0deg); opacity: 1; }
 }
 @keyframes sign-swing {
   0%, 100% { rotate: -2.5deg; }
@@ -491,6 +534,7 @@ a.menu-card:hover {
 
 .post-body { max-width: 680px; width: 100%; margin: 0 auto; padding: 56px var(--gutter); }
 .post-body p { font: 400 15.5px/1.75 var(--font-body); margin: 0 0 18px; }
+.post-body h2 { font: 700 15px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); margin: 30px 0 10px; }
 .post-body .back-link { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: inline-block; margin-bottom: 8px; }
 
 /* ==========================================================================
@@ -569,12 +613,14 @@ a.menu-card:hover {
   padding: 0 0 20px; border-bottom: 2px dotted rgba(51, 48, 42, .5);
   font: 600 13px var(--font-body);
 }
+.footer-legal a { color: var(--ink); text-decoration: none; }
+.footer-legal a:hover { color: var(--red); opacity: 1; }
 .mega-brand {
   /* "sasha's" is 5.5em wide in Hot House; 18vw fills the viewport edge to edge */
   font: 700 18vw/1 var(--font-display);
   font-variant-ligatures: contextual;
   color: var(--ink); text-align: center; white-space: nowrap;
-  margin: 48px calc(var(--gutter) * -1) 0; padding-bottom: .3em; user-select: none;
+  margin: 48px calc(var(--gutter) * -1) 0; padding-bottom: .12em; user-select: none;
 }
 @media (max-width: 900px) {
   .footer-top { grid-template-columns: 1fr; gap: 36px; }
@@ -606,5 +652,5 @@ a.menu-card:hover {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .flip-sign { animation: none; }
+  .flip-sign, .sign-hanger { animation: none; }
 }

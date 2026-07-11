@@ -8,8 +8,35 @@ var SB = {
   deliveryMin: 35,   // minimum order total for delivery ($)
   // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
   // live-mode link when Sasha's Stripe account goes live).
-  paymentLink: 'https://buy.stripe.com/test_aFacN4285fsJ1Nh4r82ZO01'
+  paymentLink: 'https://buy.stripe.com/test_aFacN4285fsJ1Nh4r82ZO01',
+  // Ticker announcements. {countdown} is replaced with a live countdown to
+  // the next Thursday 9am drop.
+  announcementsOpen: [
+    'orders are live',
+    'pickup saturday 10am to 1pm, se portland',
+    'new: whole coffee cakes',
+    'the newsletter gets the menu first'
+  ],
+  announcementsClosed: [
+    'sold out for this week',
+    'next drop in {countdown}',
+    'orders open thursday 9am',
+    'the newsletter gets the menu first'
+  ],
+  // On the speaker: what the bakes are listening to. Sasha, make this yours!
+  playlist: [
+    'Banana Pancakes · Jack Johnson',
+    'Put Your Records On · Corinne Bailey Rae',
+    'Dreams · Fleetwood Mac',
+    'Honey · Bebadoobee',
+    'Sunday Kind of Love · Etta James',
+    'Golden · Harry Styles'
+  ]
 };
+
+// Preview trick: append ?preview=closed to any page URL to see the sold-out
+// state (signs, favicon, notify-me forms) without changing the real config.
+if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
 
 // --- Tab shop sign: favicon flips open/sold-out on every page ---
 (function () {
@@ -17,6 +44,50 @@ var SB = {
   if (!link) return;
   var name = SB.ordersOpen ? 'favicon-open.svg' : 'favicon-closed.svg';
   link.href = link.href.replace(/favicon[^\/]*\.svg/, name);
+})();
+
+// --- Announcement ticker above the header (every page) ---
+(function () {
+  var msgs = SB.ordersOpen ? SB.announcementsOpen : SB.announcementsClosed;
+  if (!msgs || !msgs.length) return;
+
+  var ticker = document.createElement('div');
+  ticker.className = 'ticker';
+  ticker.setAttribute('aria-hidden', 'true');
+  var track = document.createElement('div');
+  track.className = 'ticker-track';
+  function seq() {
+    return msgs.map(function (m) {
+      return '<span class="msg">' +
+        m.replace('{countdown}', '<span class="tick-count"></span>') +
+        '</span><span class="msg">✶</span>';
+    }).join('');
+  }
+  track.innerHTML = seq() + seq(); // duplicated for a seamless -50% loop
+  ticker.appendChild(track);
+  document.body.insertBefore(ticker, document.body.firstChild);
+
+  function nextDrop() {
+    var now = new Date();
+    var target = new Date(now);
+    target.setHours(9, 0, 0, 0);
+    var diff = (4 - now.getDay() + 7) % 7; // Thursday = 4
+    if (diff === 0 && now >= target) diff = 7;
+    target.setDate(target.getDate() + diff);
+    return target;
+  }
+  function updateCount() {
+    var els = track.querySelectorAll('.tick-count');
+    if (!els.length) return;
+    var ms = nextDrop() - new Date();
+    var d = Math.floor(ms / 86400000);
+    var h = Math.floor(ms % 86400000 / 3600000);
+    var m = Math.floor(ms % 3600000 / 60000);
+    var txt = (d ? d + 'd ' : '') + h + 'h ' + ('0' + m).slice(-2) + 'm';
+    els.forEach(function (e) { e.textContent = txt; });
+  }
+  updateCount();
+  setInterval(updateCount, 30000);
 })();
 
 // --- Mini shop sign next to the brand name in the header (every page) ---
@@ -33,50 +104,133 @@ var SB = {
 })();
 
 // --- Mainstays squiggle marquee (home) ---
-// The wave stays put; the text flows along it via startOffset. The text is
-// exactly 14 identical phrase units, so one unit = total length / 14 and the
-// wrap point is exact (no visible reset).
+// The wave is the static SVG; the flowing text is drawn on a canvas overlay,
+// glyph by glyph along the same curve. No DOM text layout per frame, so it is
+// equally smooth in Safari and Chrome. The static SVG text remains as the
+// no-JS / reduced-motion fallback.
 (function () {
-  var tp = document.getElementById('mainstay-tp');
-  if (!tp) return;
+  var band = document.querySelector('.squiggle-band');
+  if (!band) return;
+  var svg = band.querySelector('svg');
+  var svgText = svg && svg.querySelector('text');
+  if (!svg || !svgText) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var textEl = tp.closest('text');
-  var UNITS = 6;
-  var unit = 600;
-  var off = 0;
+  var VBW = 1600, VBH = 130;
+  var PHRASE = 'THE MAINSTAYS   ✶   '; // 20 chars
+  var FONT = '700 26px "Hot House", cursive';
+  var LS = 5;          // letter-spacing, matches the SVG styling
+  var SPEED = 0.045;   // user units per ms
+  var DY = 10.75;      // baseline offset that centers glyphs on the stroke
+
+  // The same wave as the SVG path: quadratic segments, period 200,
+  // control points alternating y=20 / y=110 around the y=65 centerline.
+  var PTS = [], TOT = 0;
+  (function () {
+    var px = null, py = null;
+    for (var k = 0; k < 11; k++) {
+      var ax = -200 + 200 * k, cx = ax + 100, bx = ax + 200;
+      var cy = (k % 2 === 0) ? 20 : 110;
+      for (var i = (k === 0 ? 0 : 1); i <= 40; i++) {
+        var t = i / 40, u = 1 - t;
+        var x = u * u * ax + 2 * t * u * cx + t * t * bx;
+        var y = u * u * 65 + 2 * t * u * cy + t * t * 65;
+        if (px !== null) TOT += Math.hypot(x - px, y - py);
+        PTS.push({ s: TOT, x: x, y: y });
+        px = x; py = y;
+      }
+    }
+  })();
+  function posAt(s) {
+    if (s < 0) s = 0;
+    if (s > TOT) s = TOT;
+    var lo = 0, hi = PTS.length - 1;
+    while (hi - lo > 1) {
+      var mid = (lo + hi) >> 1;
+      if (PTS[mid].s <= s) lo = mid; else hi = mid;
+    }
+    var a = PTS[lo], b = PTS[hi];
+    var f = (b.s - a.s) ? (s - a.s) / (b.s - a.s) : 0;
+    return {
+      x: a.x + (b.x - a.x) * f,
+      y: a.y + (b.y - a.y) * f,
+      ang: Math.atan2(b.y - a.y, b.x - a.x)
+    };
+  }
+
+  var canvas, ctx, scale, advances = [], unit = 600;
+
+  function resize() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = band.clientWidth, h = Math.round(w * VBH / VBW);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    scale = w / VBW * dpr;
+    ctx = canvas.getContext('2d');
+  }
 
   function measure() {
-    try {
-      var total = textEl.getComputedTextLength();
-      if (total > 0) unit = total / UNITS;
-    } catch (e) {}
-  }
-  measure();
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      measure();
-      off = -((-off) % unit); // stay seamless after the real font swaps in
-    });
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.font = FONT;
+    advances = [];
+    unit = 0;
+    for (var i = 0; i < PHRASE.length; i++) {
+      var a = ctx.measureText(PHRASE[i]).width + LS;
+      advances.push(a);
+      unit += a;
+    }
   }
 
-  // Safari lays out text-on-path slower than Blink; halve its update rate.
-  var isSafari = /Safari/.test(navigator.userAgent) && !/Chrom/.test(navigator.userAgent);
-  var minFrameMs = isSafari ? 30 : 0;
-
-  var last = performance.now();
-  var lastPaint = 0;
-  function step(now) {
-    off -= (now - last) * 0.045;
+  var off = 0, last = 0;
+  function frame(now) {
+    if (last) off -= (now - last) * SPEED;
     last = now;
     while (off <= -unit) off += unit;
-    if (now - lastPaint >= minFrameMs) {
-      tp.setAttribute('startOffset', off);
-      lastPaint = now;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.clearRect(-250, -10, VBW + 500, VBH + 20);
+    ctx.font = FONT;
+    ctx.fillStyle = '#33302a';
+    ctx.textAlign = 'center';
+    var s = off, i = 0;
+    while (s < TOT) {
+      var adv = advances[i % advances.length];
+      if (s + adv > 0) {
+        var p = posAt(s + adv / 2);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.ang);
+        ctx.fillText(PHRASE[i % PHRASE.length], 0, DY);
+        ctx.restore();
+      }
+      s += adv;
+      i++;
     }
-    requestAnimationFrame(step);
+    requestAnimationFrame(frame);
   }
-  requestAnimationFrame(step);
+
+  function begin() {
+    canvas = document.createElement('canvas');
+    canvas.className = 'squiggle-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    band.style.position = 'relative';
+    canvas.style.position = 'absolute';
+    canvas.style.inset = '0';
+    canvas.style.pointerEvents = 'none';
+    band.appendChild(canvas);
+    svgText.style.display = 'none';
+    resize();
+    measure();
+    window.addEventListener('resize', function () { resize(); });
+    requestAnimationFrame(frame);
+  }
+
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load(FONT).then(begin, begin);
+  } else {
+    begin();
+  }
 })();
 
 // --- Hero photo carousel (home): crossfade every 10s ---
@@ -91,6 +245,24 @@ var SB = {
     i = (i + 1) % slides.length;
     slides[i].classList.add('is-active');
   }, 10000);
+})();
+
+// --- On the speaker: shuffleable bake soundtrack (home) ---
+(function () {
+  var trackEl = document.getElementById('jukebox-track');
+  if (!trackEl || !SB.playlist.length) return;
+  var current = -1;
+  function pick() {
+    var n;
+    do {
+      n = Math.floor(Math.random() * SB.playlist.length);
+    } while (n === current && SB.playlist.length > 1);
+    current = n;
+    trackEl.textContent = SB.playlist[current];
+  }
+  pick();
+  var btn = document.getElementById('jukebox-shuffle');
+  if (btn) btn.addEventListener('click', pick);
 })();
 
 // --- "Never miss a bake" newsletter signup ---
@@ -148,7 +320,7 @@ var SB = {
     sign.classList.toggle('is-closed', !SB.ordersOpen);
     sign.querySelector('.flip-sign-word').textContent = SB.ordersOpen ? 'Open' : 'Sold out';
     sign.querySelector('.flip-sign-sub').textContent = SB.ordersOpen
-      ? 'orders are open'
+      ? 'orders are live'
       : 'orders open Thursday 9am';
   }
 
@@ -199,7 +371,7 @@ var SB = {
       : 'Your box · ' + t.count + (t.count === 1 ? ' treat' : ' treats');
     cartSub.textContent = t.count === 0
       ? 'Add something little (or a lot).'
-      : 'Pickup Saturday 9am to noon, SE Portland. Delivery over ' + money(SB.deliveryMin) + '.';
+      : 'Pickup Saturday 10am to 1pm, SE Portland. Delivery over ' + money(SB.deliveryMin) + '.';
     cartTotal.textContent = money(t.total);
 
     var belowMin = t.count > 0 && t.total < SB.orderMin;
