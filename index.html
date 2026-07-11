@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=4" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
 </head>
 <body>
   <header class="nav">
@@ -34,9 +34,11 @@
         <a class="btn" href="preorder.html">Preorder now</a>
       </div>
       <div class="hero-art">
-        <div class="hero-panel">
-          <div class="hero-panel-title">[ Dog print ]</div>
-          <div class="hero-panel-note">artist's block print goes here:<br />pups + baguette, one color on dark</div>
+        <div class="hero-carousel" aria-label="Fresh bakes from the oven">
+          <!-- Add the artist's block print as a slide when it arrives -->
+          <img src="assets/cookie-broken.jpg" alt="Bibingka cookies" class="is-active" />
+          <img src="assets/cookie-melty.jpg" alt="Tahini chocolate chunk cookies" />
+          <img src="assets/challah.jpg" alt="Fresh baked challah" />
         </div>
       </div>
     </section>
@@ -46,42 +48,46 @@
       <svg viewBox="0 0 1600 130" role="presentation">
         <path id="mainstay-squiggle" d="M -200 65 Q -100 20, 0 65 T 200 65 T 400 65 T 600 65 T 800 65 T 1000 65 T 1200 65 T 1400 65 T 1600 65 T 1800 65 T 2000 65" fill="none" stroke="#e6a832" stroke-width="62" stroke-linecap="round"></path>
         <text dominant-baseline="central" transform="translate(0 7)">
-          <textPath id="mainstay-tp" href="#mainstay-squiggle" startOffset="0">The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays</textPath>
+          <textPath id="mainstay-tp" href="#mainstay-squiggle" startOffset="0">The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;The mainstays&#160;&#160;&#160;✶&#160;&#160;&#160;</textPath>
         </text>
       </svg>
     </div>
 
     <!-- menu cards -->
-    <section class="menu-grid">
-      <div class="menu-card card-red">
+    <section class="menu-grid" id="menu">
+      <a class="menu-card card-red" href="products/bibingka-cookies.html">
         <img src="assets/cookie-broken.jpg" alt="Bibingka cookies" />
         <h3>Bibingka cookies</h3>
-        <p>toasted banana leaf sugar · $4.50</p>
-      </div>
-      <div class="menu-card card-mustard">
-        <img src="assets/cookie-melty.jpg" alt="Vegan tahini chocolate chip" />
-        <h3>Tahini choc chip</h3>
-        <p>vegan + fudgy · $4</p>
-      </div>
-      <div class="menu-card card-olive">
+        <p>Chewy coconut rice-flour cookie with toasted banana leaf sugar.</p>
+        <p class="menu-price">$4.50</p>
+      </a>
+      <a class="menu-card card-mustard" href="products/tahini-chocolate-chunk.html">
+        <img src="assets/cookie-melty.jpg" alt="Tahini chocolate chunk cookies" />
+        <h3>Tahini chocolate chunk</h3>
+        <p>Vegan and fudgy, with dark chocolate chunks and a sesame swirl.</p>
+        <p class="menu-price">$4</p>
+      </a>
+      <a class="menu-card card-olive" href="products/hazelnut-coffee-cake.html">
         <div class="ph-tile ph-olive">[ coffee cake photo ]</div>
         <h3>Hazelnut coffee cake</h3>
-        <p>oregon streusel · $6 / $32</p>
-      </div>
-      <div class="menu-card card-plum">
+        <p>Buttery crumb buried under Oregon hazelnut streusel.</p>
+        <p class="menu-price">$6 slice · $32 whole</p>
+      </a>
+      <a class="menu-card card-plum" href="products/black-sesame-rolls.html">
         <div class="ph-tile ph-plum">[ milk rolls photo ]</div>
         <h3>Black sesame rolls</h3>
-        <p>set of 4 · $14</p>
-      </div>
+        <p>Soft milk-bread rolls swirled with black sesame paste.</p>
+        <p class="menu-price">$14 set of 4</p>
+      </a>
 
       <!-- never miss a bake -->
       <div class="signup-card">
         <div class="signup-copy">
           <h3>Never miss a bake</h3>
-          <p>Weekly specials drop alongside the mainstays. Get the menu by text or email before orders open Thursday.</p>
+          <p>Weekly specials drop alongside the mainstays. Get the menu in your inbox before orders open Thursday.</p>
         </div>
         <form class="signup-form">
-          <input type="text" placeholder="Phone or email" aria-label="Phone or email" />
+          <input type="email" placeholder="Email address" aria-label="Email address" />
           <button type="submit">Sign up</button>
         </form>
       </div>
@@ -126,6 +132,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=4"></script>
+  <script src="js/main.js?v=5"></script>
 </body>
 </html>

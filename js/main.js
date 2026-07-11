@@ -2,17 +2,16 @@
 
 // --- Shop config (single source of truth) ---
 // TODO: drive ordersOpen from the real drop schedule (Thursday 9am open).
-// Minimums are placeholder values; Sasha, set these to whatever you want.
 var SB = {
   ordersOpen: true,
-  orderMin: 12,      // minimum order total, any fulfillment ($)
+  orderMin: 12,      // minimum order total ($)
   deliveryMin: 35,   // minimum order total for delivery ($)
   // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
   // live-mode link when Sasha's Stripe account goes live).
   paymentLink: 'https://buy.stripe.com/test_6oU8wOaEBcgxfE78Ho2ZO00'
 };
 
-// --- Tab shop sign: favicon flips open/closed on every page ---
+// --- Tab shop sign: favicon flips open/sold-out on every page ---
 (function () {
   var link = document.querySelector('link[rel="icon"]');
   if (!link) return;
@@ -20,36 +19,72 @@ var SB = {
   link.href = link.href.replace(/favicon[^\/]*\.svg/, name);
 })();
 
+// --- Mini shop sign next to the brand name in the header (every page) ---
+(function () {
+  var brand = document.querySelector('.brand');
+  if (!brand) return;
+  var prefix = /\/(posts|products)\//.test(location.pathname) ? '../' : '';
+  var sign = document.createElement('a');
+  sign.className = 'mini-sign' + (SB.ordersOpen ? '' : ' is-closed');
+  sign.href = prefix + 'preorder.html';
+  sign.textContent = SB.ordersOpen ? 'Open' : 'Sold out';
+  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : 'Sold out, orders open Thursday');
+  brand.after(sign);
+})();
+
 // --- Mainstays squiggle marquee (home) ---
-// Text-on-path flows leftward, seamless loop by wrapping one phrase repetition.
+// Text-on-path flows leftward. The text is exactly 14 identical phrase units,
+// so one unit = total length / 14 and the wrap point is mathematically exact.
 (function () {
   var tp = document.getElementById('mainstay-tp');
   if (!tp) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var textEl = tp.closest('text');
-  var unitChars = 20; // "The mainstays␣␣␣✶␣␣␣"
+  var UNITS = 14;
   var unit = 400;
   function measure() {
-    try { unit = textEl.getSubStringLength(0, unitChars); } catch (e) {}
+    try {
+      var total = textEl.getComputedTextLength();
+      if (total > 0) unit = total / UNITS;
+    } catch (e) {}
   }
   measure();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      measure();
+      off = -((-off) % unit); // re-normalize so the wrap stays seamless after font swap
+    });
+  }
 
   var off = 0;
   var last = performance.now();
   function step(now) {
     off -= (now - last) * 0.045;
     last = now;
-    if (off <= -unit) off += unit;
+    while (off <= -unit) off += unit;
     tp.setAttribute('startOffset', off);
     requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 })();
 
+// --- Hero photo carousel (home): crossfade every 10s ---
+(function () {
+  var carousel = document.querySelector('.hero-carousel');
+  if (!carousel) return;
+  var slides = carousel.querySelectorAll('img');
+  if (slides.length < 2) return;
+  var i = 0;
+  setInterval(function () {
+    slides[i].classList.remove('is-active');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('is-active');
+  }, 10000);
+})();
+
 // --- "Never miss a bake" newsletter signup ---
-// TODO: wire to a real SMS/email marketing backend (Mailchimp, Klaviyo, Postscript).
+// TODO: wire to a real email marketing backend (Mailchimp, Klaviyo).
 (function () {
   var forms = document.querySelectorAll('.signup-form');
   forms.forEach(function (form) {
@@ -79,7 +114,7 @@ var SB = {
   });
 })();
 
-// --- Preorder: flip sign, steppers, stock labels, minimums, cart handoff ---
+// --- Preorder: flip sign, steppers, stock labels, minimums, Stripe handoff ---
 (function () {
   var grid = document.querySelector('.order-grid');
   if (!grid) return;
@@ -87,7 +122,7 @@ var SB = {
   var sign = document.getElementById('status-sign');
   if (sign) {
     sign.classList.toggle('is-closed', !SB.ordersOpen);
-    sign.querySelector('.flip-sign-word').textContent = SB.ordersOpen ? 'Open' : 'Closed';
+    sign.querySelector('.flip-sign-word').textContent = SB.ordersOpen ? 'Open' : 'Sold out';
     sign.querySelector('.flip-sign-sub').textContent = SB.ordersOpen
       ? "this week's bakes are live"
       : 'orders open Thursday 9am';
@@ -102,8 +137,6 @@ var SB = {
 
   var items = cards.map(function (card) {
     return {
-      name: card.querySelector('h3').textContent,
-      priceLabel: card.querySelector('.order-price').textContent,
       price: parseFloat(card.dataset.price),
       stock: parseInt(card.dataset.stock, 10),
       qty: 0,
@@ -150,7 +183,7 @@ var SB = {
       ? 'Order minimum is ' + money(SB.orderMin) + '. Add ' + money(SB.orderMin - t.total) + ' more.'
       : '';
     checkoutBtn.disabled = t.count === 0 || belowMin || !SB.ordersOpen;
-    checkoutBtn.textContent = SB.ordersOpen ? 'Check out' : 'Orders closed';
+    checkoutBtn.textContent = SB.ordersOpen ? 'Check out' : 'Sold out';
   }
 
   items.forEach(function (it) {
@@ -165,110 +198,9 @@ var SB = {
   checkoutBtn.addEventListener('click', function () {
     var t = totals();
     if (t.count === 0 || t.total < SB.orderMin || !SB.ordersOpen) return;
-    var cart = items
-      .filter(function (it) { return it.qty > 0; })
-      .map(function (it) {
-        return { name: it.name, priceLabel: it.priceLabel, price: it.price, qty: it.qty };
-      });
-    localStorage.setItem('sb-cart', JSON.stringify(cart));
-    // Card payment happens on Stripe's hosted page (quantities are confirmed there).
-    // The email-order path lives at checkout.html, linked from the fine print.
+    // Payment happens on Stripe's hosted page; quantities are confirmed there.
     window.location.href = SB.paymentLink;
   });
 
   render();
-})();
-
-// --- Checkout page ---
-(function () {
-  var page = document.getElementById('checkout-page');
-  if (!page) return;
-
-  var cart = [];
-  try { cart = JSON.parse(localStorage.getItem('sb-cart') || '[]'); } catch (e) {}
-
-  var emptyEl = document.getElementById('checkout-empty');
-  var gridEl = document.querySelector('.checkout-grid');
-  if (!cart.length) {
-    emptyEl.classList.remove('hidden');
-    gridEl.classList.add('hidden');
-    return;
-  }
-
-  function money(n) {
-    return '$' + n.toFixed(2).replace(/\.00$/, '');
-  }
-
-  var total = cart.reduce(function (sum, it) { return sum + it.price * it.qty; }, 0);
-  var lines = document.getElementById('summary-lines');
-  cart.forEach(function (it) {
-    var row = document.createElement('div');
-    row.className = 'summary-line';
-    var label = document.createElement('span');
-    label.textContent = it.qty + ' × ' + it.name;
-    var amt = document.createElement('span');
-    amt.textContent = money(it.price * it.qty);
-    row.appendChild(label);
-    row.appendChild(amt);
-    lines.appendChild(row);
-  });
-  document.getElementById('summary-total').textContent = money(total);
-
-  var addressWrap = document.getElementById('address-wrap');
-  var notice = document.getElementById('form-notice');
-  var placeBtn = document.getElementById('place-order');
-
-  function fulfillment() {
-    var checked = document.querySelector('input[name="fulfillment"]:checked');
-    return checked ? checked.value : 'pickup';
-  }
-
-  function validateFulfillment() {
-    var isDelivery = fulfillment() === 'delivery';
-    addressWrap.classList.toggle('hidden', !isDelivery);
-    if (isDelivery && total < SB.deliveryMin) {
-      notice.textContent = 'Delivery needs a ' + money(SB.deliveryMin) + ' minimum. Your box is ' +
-        money(total) + '. Add more treats or switch to pickup.';
-      placeBtn.setAttribute('disabled', '');
-    } else {
-      notice.textContent = '';
-      placeBtn.removeAttribute('disabled');
-    }
-  }
-
-  document.querySelectorAll('input[name="fulfillment"]').forEach(function (radio) {
-    radio.addEventListener('change', validateFulfillment);
-  });
-  validateFulfillment();
-
-  document.getElementById('checkout-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var name = document.getElementById('co-name').value.trim();
-    var email = document.getElementById('co-email').value.trim();
-    var phone = document.getElementById('co-phone').value.trim();
-    var address = document.getElementById('co-address').value.trim();
-    var notes = document.getElementById('co-notes').value.trim();
-    var isDelivery = fulfillment() === 'delivery';
-    if (isDelivery && !address) {
-      notice.textContent = 'Add a delivery address (SE Portland).';
-      return;
-    }
-
-    // TODO: replace mailto with a real order backend + Stripe checkout.
-    var body = 'ORDER\n' + cart.map(function (it) {
-      return it.qty + ' x ' + it.name + ' (' + money(it.price * it.qty) + ')';
-    }).join('\n') +
-    '\nTotal: ' + money(total) +
-    '\n\nFulfillment: ' + (isDelivery ? 'Delivery to: ' + address : 'Porch pickup, Saturday 9am to noon') +
-    '\nName: ' + name +
-    '\nEmail: ' + email +
-    (phone ? '\nPhone: ' + phone : '') +
-    (notes ? '\nNotes: ' + notes : '');
-
-    window.location.href = 'mailto:info@sashasbakeshop.com?subject=' +
-      encodeURIComponent('Preorder: ' + name) + '&body=' + encodeURIComponent(body);
-
-    document.getElementById('checkout-main').classList.add('hidden');
-    document.getElementById('order-confirm').classList.remove('hidden');
-  });
 })();

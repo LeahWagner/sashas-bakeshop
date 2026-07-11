@@ -3,14 +3,14 @@
 Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Plain HTML/CSS/vanilla JS, no build step. Implements the brand design handoff (playful hand-cut letterpress).
 
 ## Pages
-- `index.html` — Home: hero, mainstays marquee, menu cards, signup, how it works
-- `preorder.html` — This week's bakes: quantity steppers, live stock labels, cart bar with order minimum, flip OPEN/CLOSED sign
-- `checkout.html` — Order flow: contact details, pickup or delivery (with delivery minimum), order summary; places the order via the visitor's email app for now
-- `about.html` — Sasha's story
+- `index.html` — Home: hero photo carousel, mainstays marquee, clickable menu cards, signup, how it works
+- `preorder.html` — This week's bakes: quantity steppers, live stock labels, cart bar with order minimum, woodcut OPEN/SOLD OUT flip sign; checkout goes to the Stripe Payment Link (all orders prepaid)
+- `products/` — One page per bake; menu cards on Home link here
+- `about.html` — Sasha's story (dog disclaimer footnote included)
 - `contact.html` — Contact cards + "drop a note" form (opens visitor's email app)
-- `journal.html` + `posts/` — Blog for SEO and newsletter content; copy `posts/hello-from-the-oven.html` as the template for new posts
+- `journal.html` + `posts/` — Blog for SEO and newsletter content; copy `posts/welcome-to-sashas-bakeshop.html` as the template for new posts
 
-The logo (top-left, every page) links back to Home.
+The logo (top-left, every page) links back to Home. A mini open/sold-out sign is injected next to it by `js/main.js`, and the favicon flips to match.
 
 ## Shop config
 Top of `js/main.js`: `SB.ordersOpen` (drives the flip sign + open/closed favicon), `SB.orderMin`, `SB.deliveryMin`, `SB.paymentLink` (Stripe Payment Link for the weekly drop).
