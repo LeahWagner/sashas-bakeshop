@@ -162,6 +162,7 @@ a:hover, button:hover { opacity: .85; }
 .squiggle-band text {
   font: 700 26px var(--font-display); letter-spacing: 5px; text-transform: uppercase;
   fill: var(--ink);
+  text-rendering: optimizeSpeed; pointer-events: none;
 }
 
 /* ==========================================================================
@@ -570,10 +571,10 @@ a.menu-card:hover {
 }
 .mega-brand {
   /* "sasha's" is 5.5em wide in Hot House; 18vw fills the viewport edge to edge */
-  font: 700 18vw/0.82 var(--font-display);
+  font: 700 18vw/1 var(--font-display);
   font-variant-ligatures: contextual;
   color: var(--ink); text-align: center; white-space: nowrap;
-  margin: 26px calc(var(--gutter) * -1) -0.1em; user-select: none;
+  margin: 48px calc(var(--gutter) * -1) 0; padding-bottom: .3em; user-select: none;
 }
 @media (max-width: 900px) {
   .footer-top { grid-template-columns: 1fr; gap: 36px; }

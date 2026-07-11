@@ -42,7 +42,7 @@ var SB = {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var textEl = tp.closest('text');
-  var UNITS = 14;
+  var UNITS = 6;
   var unit = 600;
   var off = 0;
 
@@ -60,12 +60,20 @@ var SB = {
     });
   }
 
+  // Safari lays out text-on-path slower than Blink; halve its update rate.
+  var isSafari = /Safari/.test(navigator.userAgent) && !/Chrom/.test(navigator.userAgent);
+  var minFrameMs = isSafari ? 30 : 0;
+
   var last = performance.now();
+  var lastPaint = 0;
   function step(now) {
     off -= (now - last) * 0.045;
     last = now;
     while (off <= -unit) off += unit;
-    tp.setAttribute('startOffset', off);
+    if (now - lastPaint >= minFrameMs) {
+      tp.setAttribute('startOffset', off);
+      lastPaint = now;
+    }
     requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
