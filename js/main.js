@@ -6,7 +6,10 @@
 var SB = {
   ordersOpen: true,
   orderMin: 12,      // minimum order total, any fulfillment ($)
-  deliveryMin: 35    // minimum order total for delivery ($)
+  deliveryMin: 35,   // minimum order total for delivery ($)
+  // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
+  // live-mode link when Sasha's Stripe account goes live).
+  paymentLink: 'https://buy.stripe.com/test_6oU8wOaEBcgxfE78Ho2ZO00'
 };
 
 // --- Tab shop sign: favicon flips open/closed on every page ---
@@ -168,7 +171,9 @@ var SB = {
         return { name: it.name, priceLabel: it.priceLabel, price: it.price, qty: it.qty };
       });
     localStorage.setItem('sb-cart', JSON.stringify(cart));
-    window.location.href = 'checkout.html';
+    // Card payment happens on Stripe's hosted page (quantities are confirmed there).
+    // The email-order path lives at checkout.html, linked from the fine print.
+    window.location.href = SB.paymentLink;
   });
 
   render();

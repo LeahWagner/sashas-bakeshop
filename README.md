@@ -13,7 +13,16 @@ Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Pl
 The logo (top-left, every page) links back to Home.
 
 ## Shop config
-Top of `js/main.js`: `SB.ordersOpen` (drives the flip sign + open/closed favicon), `SB.orderMin`, `SB.deliveryMin`. Cart hands off to checkout via localStorage.
+Top of `js/main.js`: `SB.ordersOpen` (drives the flip sign + open/closed favicon), `SB.orderMin`, `SB.deliveryMin`, `SB.paymentLink` (Stripe Payment Link for the weekly drop).
+
+## Stripe (sandbox for now)
+Account: Sasha's Bakeshop sandbox (`acct_1Trpw1D8gu8vcOCx`). Created via API:
+- Products + prices: Bibingka cookies $4.50, Tahini choc chip $4, Hazelnut coffee cake slice $6, Black sesame rolls (set of 4) $14 — each carries `metadata.slug` and `metadata.weekly_stock`
+- Weekly-drop Payment Link (`plink_1Trq6TD8gu8vcOCxEE7R1Uay`): all four items with adjustable quantities capped at weekly stock, pickup/delivery dropdown, delivery-address + notes fields, phone collection, minimums in the submit text, custom confirmation message
+
+"Check out" sends the customer to the Payment Link; quantities are confirmed on Stripe's page. The email-order path (`checkout.html`, pay at pickup) remains as fallback, linked from the preorder fine print.
+
+**Going live checklist:** activate the real Stripe account, recreate products + payment link in live mode (or use the dashboard's "copy to live mode"), then swap `SB.paymentLink`. Test with card 4242 4242 4242 4242 in sandbox first.
 
 ## Run it locally
 ```bash
