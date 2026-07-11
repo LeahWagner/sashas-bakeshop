@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=12" />
+  <link rel="stylesheet" href="css/styles.css?v=13" />
 </head>
 <body>
   <header class="nav">
@@ -95,43 +95,50 @@
       </div>
     </section>
 
-    <!-- how it works -->
+    <!-- how it works: ticket stubs -->
     <section class="how-band">
       <div class="how-inner">
         <h2>How it works</h2>
-        <div class="how-grid">
-          <div>
-            <h3>1 · Order Thursday</h3>
+        <div class="tickets">
+          <div class="ticket">
+            <div class="ticket-num">1</div>
+            <h3>Order Thursday</h3>
             <p>Preorders open 9am right here on the site. Small batches, first come first served.</p>
           </div>
-          <div>
-            <h3>2 · Wait patiently (or not)</h3>
+          <div class="ticket">
+            <div class="ticket-num">2</div>
+            <h3>Wait patiently (or not)</h3>
             <p>Everything comes out of the oven Saturday morning, the day of pickup. No day-olds, ever.</p>
           </div>
-          <div>
-            <h3>3 · Pickup Saturday</h3>
+          <div class="ticket">
+            <div class="ticket-num">3</div>
+            <h3>Pickup Saturday</h3>
             <p>Pickup in SE Portland, 10am to 1pm. Location in your confirmation.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- about teaser -->
-    <section class="teaser">
-      <div class="teaser-photo">sasha +<br />dogs<br />photo</div>
-      <div class="teaser-copy"><strong>Hi, I'm Sasha.</strong> I bake out of my SE Portland kitchen with two dogs underfoot. <a href="about.html">More about the bakeshop →</a></div>
-    </section>
-
-    <!-- now spinning -->
-    <section class="jukebox">
-      <div class="jukebox-inner">
-        <div class="vinyl"><div class="vinyl-label"></div></div>
-        <div class="jukebox-copy">
-          <div class="jukebox-label">Now spinning in the kitchen</div>
-          <div class="jukebox-song" id="jukebox-track">…</div>
-          <div class="jukebox-sub">Every batch gets a soundtrack. This week's bakes were serenaded by the track above.</div>
+    <!-- sasha + jukebox split row -->
+    <section class="split-row">
+      <div class="sasha-cell">
+        <div class="sasha-photo">sasha +<br />dogs<br />photo</div>
+        <div class="intro"><strong>Hi, I'm Sasha.</strong> I bake out of my SE Portland kitchen with two dogs underfoot. <a href="about.html">More about the bakeshop →</a></div>
+      </div>
+      <div class="jukebox-cell">
+        <a class="sleeve-link" id="playlist-link" href="https://open.spotify.com/playlist/sashas-baking-mix" target="_blank" rel="noopener" title="Open the baking mix on Spotify">
+          <div class="record45"><div class="record45-label"></div></div>
+          <div class="sleeve">
+            <div class="s1">Sasha's</div>
+            <div class="s2">Baking mix</div>
+            <div class="s3">on Spotify</div>
+          </div>
+        </a>
+        <div class="jukebox-stack">
+          <div class="jukebox-eyebrow">Now spinning in the kitchen</div>
+          <div class="jukebox-track" id="jukebox-track">…</div>
+          <button type="button" class="spin-btn" id="jukebox-shuffle">Spin another</button>
         </div>
-        <button type="button" class="jukebox-shuffle" id="jukebox-shuffle">Spin another ↻</button>
       </div>
     </section>
   </main>
@@ -178,6 +185,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=12"></script>
+  <script src="js/main.js?v=13"></script>
 </body>
 </html>

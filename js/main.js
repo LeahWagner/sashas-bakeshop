@@ -23,14 +23,15 @@ var SB = {
     'orders open thursday 9am',
     'the newsletter gets the menu first'
   ],
-  // On the speaker: what the bakes are listening to. Sasha, make this yours!
+  // Now spinning: the kitchen soundtrack (design handoff 2c list).
+  // TODO: swap in the real playlist URL from Sasha.
+  playlistUrl: 'https://open.spotify.com/playlist/sashas-baking-mix',
   playlist: [
-    'Banana Pancakes · Jack Johnson',
-    'Put Your Records On · Corinne Bailey Rae',
-    'Dreams · Fleetwood Mac',
-    'Honey · Bebadoobee',
     'Sunday Kind of Love · Etta James',
-    'Golden · Harry Styles'
+    'Dream a Little Dream · Ella Fitzgerald',
+    'La Vie en Rose · Louis Armstrong',
+    'Stand by Me · Ben E. King',
+    'Be My Baby · The Ronettes'
   ]
 };
 
@@ -247,22 +248,19 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
   }, 10000);
 })();
 
-// --- On the speaker: shuffleable bake soundtrack (home) ---
+// --- Now spinning: cycles the kitchen soundtrack, sleeve links to the playlist (home) ---
 (function () {
   var trackEl = document.getElementById('jukebox-track');
   if (!trackEl || !SB.playlist.length) return;
-  var current = -1;
-  function pick() {
-    var n;
-    do {
-      n = Math.floor(Math.random() * SB.playlist.length);
-    } while (n === current && SB.playlist.length > 1);
-    current = n;
-    trackEl.textContent = SB.playlist[current];
+  var songIndex = 0;
+  function render() {
+    trackEl.textContent = SB.playlist[songIndex % SB.playlist.length];
   }
-  pick();
+  render();
   var btn = document.getElementById('jukebox-shuffle');
-  if (btn) btn.addEventListener('click', pick);
+  if (btn) btn.addEventListener('click', function () { songIndex++; render(); });
+  var link = document.getElementById('playlist-link');
+  if (link) link.href = SB.playlistUrl;
 })();
 
 // --- "Never miss a bake" newsletter signup ---
