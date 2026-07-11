@@ -351,53 +351,37 @@ a.menu-card:hover {
   display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
 }
 .preorder-band p { max-width: 480px; }
-/* Hanging flip shop sign (OPEN / SOLD OUT), woodcut-stamp style, driven by js/main.js.
-   Structure: .sign-hanger (nail + strings, swings) > .flip-sign (board, flips on load).
-   The strings are pseudo-elements of the hanger so they paint BEHIND the board. */
-.sign-hanger {
-  position: relative;
-  margin-top: 22px;
-  transform-origin: 50% -22px;
-  animation: sign-swing 4.5s ease-in-out 1s infinite;
+/* Taped-paper flip sign (OPEN / SOLD OUT), design handoff option 3c.
+   A crooked cream sheet held by two bits of tape; card-flips (rotateY) between
+   faces when SB.ordersOpen changes. Driven by js/main.js. */
+.paper-sign { perspective: 1000px; }
+.paper-flipper {
+  position: relative; width: 270px; height: 170px;
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.3, 1.45, .45, 1); /* springy overshoot, keep */
+  transform: rotateY(0deg);
 }
-.sign-hanger::before, .sign-hanger::after { /* two strings from the nail down behind the board */
-  content: ""; position: absolute; top: -21px; left: 50%;
-  width: 2px; height: 72px; margin-left: -1px; background: var(--ink);
-  transform-origin: top center;
+.paper-flipper.is-flipped { transform: rotateY(-180deg); }
+.paper-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  background: linear-gradient(172deg, #fdf8ea 60%, #f3e9d2);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .18), 0 14px 24px -10px rgba(0, 0, 0, .4);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
 }
-.sign-hanger::before { transform: rotate(64deg); }
-.sign-hanger::after { transform: rotate(-64deg); }
-.sign-nail { /* nail head the sign hangs from */
-  position: absolute; top: -27px; left: 50%;
-  width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%;
-  background: var(--ink); box-shadow: inset 1.5px 1.5px 0 rgba(250, 243, 227, .35);
+.paper-face.front { transform: rotate(-1.2deg); }
+.paper-face.back { transform: rotateY(180deg) rotate(1.2deg); }
+.paper-face .tape {
+  position: absolute; width: 64px; height: 22px;
+  background: rgba(250, 243, 227, .65);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
 }
-.flip-sign {
-  position: relative;
-  background:
-    repeating-linear-gradient(94deg, rgba(51, 48, 42, .05) 0 2px, transparent 2px 9px),
-    var(--cream);
-  color: var(--ink);
-  border: 3px solid var(--ink);
-  /* uneven radii = hand-cut edge */
-  border-radius: 10px 5px 12px 6px / 6px 12px 5px 10px;
-  box-shadow: inset 0 0 0 3px var(--cream), inset 0 0 0 5px var(--ink), 3px 4px 0 rgba(51, 48, 42, .3);
-  padding: 15px 30px 13px;
-  display: flex; flex-direction: column; align-items: center; gap: 1px;
-  transform-origin: 50% -22px;
-  animation: sign-flip .9s ease-out both;
-}
-.flip-sign-word { font: 700 21px var(--font-display); letter-spacing: 2.5px; text-transform: uppercase; text-shadow: 1.5px 1.5px 0 rgba(51, 48, 42, .18); }
-.flip-sign-sub { font: 600 11px var(--font-body); opacity: .7; }
-.flip-sign.is-closed {
-  background:
-    repeating-linear-gradient(94deg, rgba(250, 243, 227, .07) 0 2px, transparent 2px 9px),
-    var(--ink);
-  color: var(--cream);
-  box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--cream), 3px 4px 0 rgba(51, 48, 42, .3);
-  border-color: var(--ink);
-}
-.flip-sign.is-closed .flip-sign-word { text-shadow: 1.5px 1.5px 0 rgba(250, 243, 227, .2); }
+.paper-face .tape-left { top: -11px; left: -16px; transform: rotate(-42deg); }
+.paper-face .tape-right { top: -11px; right: -16px; transform: rotate(42deg); }
+.paper-face .sign-open-word { font: 700 46px var(--font-display); letter-spacing: 4px; color: var(--ink); }
+.paper-face .sign-soldout-word { font: 700 36px var(--font-display); letter-spacing: 3px; color: #F8532C; text-align: center; }
+.paper-face .sign-scrawl { font: 400 19px 'Permanent Marker', cursive; color: var(--ink); transform: rotate(-1.5deg); }
+@media (prefers-reduced-motion: reduce) { .paper-flipper { transition: none; } }
 
 /* Mini sign next to the brand name in the header (injected by js/main.js) */
 .mini-sign {
@@ -412,17 +396,20 @@ a.menu-card:hover {
   rotate: -3deg;
 }
 .mini-sign:hover { text-decoration: none; rotate: 2deg; }
-.mini-sign.is-closed { background: var(--ink); color: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink), inset 0 0 0 2.5px var(--cream); }
-@keyframes sign-flip { /* flips to its current state on landing, with a little settle */
-  0%   { transform: rotateX(90deg); opacity: 0; }
-  55%  { transform: rotateX(-12deg); opacity: 1; }
-  78%  { transform: rotateX(6deg); }
-  100% { transform: rotateX(0deg); opacity: 1; }
+/* Sold-out state: bright, loud, impossible to miss */
+.mini-sign.is-closed {
+  background: #F8532C; color: var(--cream);
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px #F8532C, inset 0 0 0 2.5px var(--cream);
+  font-size: 11px; padding: 6px 12px 5px;
+  animation: soldout-pulse 2.6s ease-in-out infinite;
 }
-@keyframes sign-swing {
-  0%, 100% { rotate: -2.5deg; }
-  50%      { rotate: 2.5deg; }
+@keyframes soldout-pulse {
+  0%, 100% { transform: scale(1); }
+  12%      { transform: scale(1.09); }
+  24%      { transform: scale(1); }
 }
+@media (prefers-reduced-motion: reduce) { .mini-sign.is-closed { animation: none; } }
 
 .order-grid {
   max-width: var(--maxw-narrow); width: 100%; margin: 0 auto; padding: 48px var(--gutter);

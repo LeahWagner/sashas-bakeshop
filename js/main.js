@@ -315,13 +315,11 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
   var grid = document.querySelector('.order-grid');
   if (!grid) return;
 
+  // Taped-paper sign: starts on OPEN; when sold out it card-flips over
+  // shortly after landing so visitors catch the flip.
   var sign = document.getElementById('status-sign');
-  if (sign) {
-    sign.classList.toggle('is-closed', !SB.ordersOpen);
-    sign.querySelector('.flip-sign-word').textContent = SB.ordersOpen ? 'Open' : 'Sold out';
-    sign.querySelector('.flip-sign-sub').textContent = SB.ordersOpen
-      ? 'orders are live'
-      : 'orders open Thursday 9am';
+  if (sign && !SB.ordersOpen) {
+    setTimeout(function () { sign.classList.add('is-flipped'); }, 700);
   }
 
   var cards = Array.prototype.slice.call(grid.querySelectorAll('.order-card'));
