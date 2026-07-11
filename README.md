@@ -8,6 +8,7 @@ Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Pl
 - `products/` — One page per bake; menu cards on Home link here
 - `about.html` — Sasha's story (dog disclaimer footnote included)
 - `contact.html` — Contact cards + "drop a note" form (opens visitor's email app)
+- `faq.html` — Accordion FAQ (ordering, pickup, minimums, allergens, dogs, policies)
 - `journal.html` + `posts/` — Blog for SEO and newsletter content; copy `posts/welcome-to-sashas-bakeshop.html` as the template for new posts
 
 The logo (top-left, every page) links back to Home. A mini open/sold-out sign is injected next to it by `js/main.js`, and the favicon flips to match.

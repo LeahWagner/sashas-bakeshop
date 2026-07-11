@@ -33,40 +33,36 @@ var SB = {
 })();
 
 // --- Mainstays squiggle marquee (home) ---
-// Text-on-path flows leftward. The text is exactly 14 identical phrase units,
-// so one unit = total length / 14 and the wrap point is mathematically exact.
+// The track (wave + text) slides 600 user units left via CSS transform, then
+// loops. 600 = 3 wave periods, and we calibrate letter-spacing so one text
+// phrase unit (20 chars, 14 repetitions) is exactly 600 units wide. Both wave
+// and text land pixel-identical at the loop point: a perfectly clean cut.
 (function () {
+  var track = document.getElementById('squiggle-track');
   var tp = document.getElementById('mainstay-tp');
-  if (!tp) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!track || !tp) return;
 
   var textEl = tp.closest('text');
   var UNITS = 14;
-  var unit = 400;
-  function measure() {
+  var TARGET = 600;      // user units per phrase unit
+  var CHARS_PER_UNIT = 20;
+
+  function calibrate() {
     try {
-      var total = textEl.getComputedTextLength();
-      if (total > 0) unit = total / UNITS;
+      var ls = 5; // starting letter-spacing from CSS
+      for (var i = 0; i < 4; i++) {
+        var unit = textEl.getComputedTextLength() / UNITS;
+        if (Math.abs(unit - TARGET) < 0.05) break;
+        ls += (TARGET - unit) / CHARS_PER_UNIT;
+        textEl.style.letterSpacing = ls.toFixed(3) + 'px';
+      }
     } catch (e) {}
-  }
-  measure();
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      measure();
-      off = -((-off) % unit); // re-normalize so the wrap stays seamless after font swap
-    });
+    track.classList.add('is-animating');
   }
 
-  var off = 0;
-  var last = performance.now();
-  function step(now) {
-    off -= (now - last) * 0.045;
-    last = now;
-    while (off <= -unit) off += unit;
-    tp.setAttribute('startOffset', off);
-    requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+  // Wait for the display font so the calibration matches what renders.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(calibrate);
+  else calibrate();
 })();
 
 // --- Hero photo carousel (home): crossfade every 10s ---

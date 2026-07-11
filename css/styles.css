@@ -116,6 +116,7 @@ a:hover, button:hover { opacity: .85; }
 .band-plum { background: var(--plum); color: var(--cream); }
 .band-red { background: var(--red); color: var(--cream); }
 .band-olive { background: var(--olive); color: var(--cream); }
+.band-ink { background: var(--ink); color: var(--cream); }
 
 /* ==========================================================================
    Home: hero
@@ -161,6 +162,21 @@ a:hover, button:hover { opacity: .85; }
 .squiggle-band text {
   font: 700 26px var(--font-display); letter-spacing: 5px; text-transform: uppercase;
   fill: var(--ink);
+}
+/* Marquee: the whole track (wave + text) slides exactly 600 user units left,
+   which is 3 wave periods AND (after JS letter-spacing calibration) exactly one
+   text phrase unit, so the loop restart is pixel-identical. GPU transform, no
+   per-frame layout. JS adds .is-animating once calibrated. */
+#squiggle-track.is-animating {
+  animation: squiggle-scroll 13.333s linear infinite;
+  will-change: transform;
+}
+@keyframes squiggle-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-600px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #squiggle-track.is-animating { animation: none; }
 }
 
 /* ==========================================================================
@@ -420,6 +436,29 @@ a.menu-card:hover {
 .product-meta { font: 600 12.5px var(--font-body); opacity: .65; margin: 0 0 26px; }
 .back-to-menu { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: inline-block; margin-bottom: 14px; }
 @media (max-width: 900px) { .product-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+/* ==========================================================================
+   FAQ
+   ========================================================================== */
+.faq-list {
+  max-width: 760px; width: 100%; margin: 0 auto; padding: 56px var(--gutter);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.faq-list details { border: 2px solid var(--ink); border-radius: 12px; background: var(--surface); }
+.faq-list summary {
+  cursor: pointer; padding: 18px 22px; list-style: none;
+  font: 700 14px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: "+"; font: 700 20px var(--font-body); color: var(--red); flex: none; }
+.faq-list details[open] summary::after { content: "−"; }
+.faq-list details[open] summary { border-bottom: 2px solid var(--ink); }
+.faq-answer { padding: 16px 22px 20px; }
+.faq-answer p { font: 400 14.5px/1.7 var(--font-body); margin: 0 0 12px; }
+.faq-answer p:last-child { margin-bottom: 0; }
+.faq-outro { max-width: 760px; margin: 0 auto; padding: 0 var(--gutter) 56px; font: 400 14px/1.7 var(--font-body); opacity: .75; }
+.faq-outro a { color: var(--red); font-weight: 600; }
 
 /* ==========================================================================
    Journal (blog)
