@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Tab "shop sign": red = orders closed. Swapped by js/main.js based on availability. -->
-  <line x1="16" y1="0" x2="16" y2="7" stroke="#33302a" stroke-width="2"/>
-  <rect x="2" y="7" width="28" height="20" rx="5" fill="#d14b2b" stroke="#33302a" stroke-width="2"/>
-  <text x="16" y="20.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="6.5" font-weight="bold" fill="#faf3e3">CLOSED</text>
-</svg>

@@ -1,16 +1,20 @@
-/* sasha's bakeshop — shared scripts */
+/* sasha's bakeshop - shared scripts */
 
 // --- Shop config (single source of truth) ---
 // TODO: drive ordersOpen from the real drop schedule (Thursday 9am open).
 var SB = {
-  ordersOpen: true,
+  // Pre-launch: the shop isn't live yet. The site stays browsable, but ordering
+  // is off and everything counts down to launch. Flip to true on launch day.
+  ordersOpen: false,
+  // First drop drives the launch countdown in the ticker + signs.
+  launchDate: new Date(2026, 7, 6, 9, 0, 0), // Aug 6, 2026 (Thu), 9am (month is 0-indexed)
   orderMin: 12,      // minimum order total ($)
   deliveryMin: 35,   // minimum order total for delivery ($)
   // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
   // live-mode link when Sasha's Stripe account goes live).
   paymentLink: 'https://buy.stripe.com/test_aFacN4285fsJ1Nh4r82ZO01',
-  // Ticker announcements. {countdown} is replaced with a live countdown to
-  // the next Thursday 9am drop.
+  // Ticker announcements. {countdown} is replaced with a live countdown:
+  // to launch while pre-launch, then to the next Thursday 9am drop.
   announcementsOpen: [
     'orders are live',
     'pickup saturday 10am to 1pm, se portland',
@@ -18,33 +22,16 @@ var SB = {
     'the newsletter gets the menu first'
   ],
   announcementsClosed: [
-    'sold out for this week',
-    'next drop in {countdown}',
-    'orders open thursday 9am',
+    'first drop thursday august 6',
+    'launching in {countdown}',
+    'preorders open august 6',
     'the newsletter gets the menu first'
-  ],
-  // Now spinning: the kitchen soundtrack (design handoff 2c list).
-  playlistUrl: 'https://open.spotify.com/playlist/1JM6qLPBChNXCUC1UqeTYk?si=640780ce951c4c71',
-  playlist: [
-    'Sunday Kind of Love · Etta James',
-    'Dream a Little Dream · Ella Fitzgerald',
-    'La Vie en Rose · Louis Armstrong',
-    'Stand by Me · Ben E. King',
-    'Be My Baby · The Ronettes'
   ]
 };
 
 // Preview trick: append ?preview=closed to any page URL to see the sold-out
 // state (signs, favicon, notify-me forms) without changing the real config.
 if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
-
-// --- Tab shop sign: favicon flips open/sold-out on every page ---
-(function () {
-  var link = document.querySelector('link[rel="icon"]');
-  if (!link) return;
-  var name = SB.ordersOpen ? 'favicon-open.svg' : 'favicon-closed.svg';
-  link.href = link.href.replace(/favicon[^\/]*\.svg/, name);
-})();
 
 // --- Announcement ticker above the header (every page) ---
 (function () {
@@ -76,10 +63,15 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
     target.setDate(target.getDate() + diff);
     return target;
   }
+  function countdownTarget() {
+    // Before launch, count down to opening day; after, to the next Thursday drop.
+    if (SB.launchDate && SB.launchDate > new Date()) return SB.launchDate;
+    return nextDrop();
+  }
   function updateCount() {
     var els = track.querySelectorAll('.tick-count');
     if (!els.length) return;
-    var ms = nextDrop() - new Date();
+    var ms = countdownTarget() - new Date();
     var d = Math.floor(ms / 86400000);
     var h = Math.floor(ms % 86400000 / 3600000);
     var m = Math.floor(ms % 3600000 / 60000);
@@ -95,11 +87,12 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
   var brand = document.querySelector('.brand');
   if (!brand) return;
   var prefix = /\/(posts|products)\//.test(location.pathname) ? '../' : '';
+  var preLaunch = SB.launchDate && SB.launchDate > new Date();
   var sign = document.createElement('a');
   sign.className = 'mini-sign' + (SB.ordersOpen ? '' : ' is-closed');
   sign.href = prefix + 'preorder.html';
-  sign.textContent = SB.ordersOpen ? 'Orders open' : 'Sold out';
-  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : 'Sold out, orders open Thursday');
+  sign.textContent = SB.ordersOpen ? 'Orders open' : (preLaunch ? 'Opening soon' : 'Sold out');
+  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : (preLaunch ? 'Opening soon, first drop August 6' : 'Sold out, orders open Thursday'));
   brand.after(sign);
 })();
 
@@ -247,21 +240,6 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
   }, 10000);
 })();
 
-// --- Now spinning: cycles the kitchen soundtrack, sleeve links to the playlist (home) ---
-(function () {
-  var trackEl = document.getElementById('jukebox-track');
-  if (!trackEl || !SB.playlist.length) return;
-  var songIndex = 0;
-  function render() {
-    trackEl.textContent = SB.playlist[songIndex % SB.playlist.length];
-  }
-  render();
-  var btn = document.getElementById('jukebox-shuffle');
-  if (btn) btn.addEventListener('click', function () { songIndex++; render(); });
-  var link = document.getElementById('playlist-link');
-  if (link) link.href = SB.playlistUrl;
-})();
-
 // --- "Never miss a bake" newsletter signup ---
 // TODO: wire to a real email marketing backend (Mailchimp, Klaviyo).
 (function () {
@@ -374,7 +352,8 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
       ? 'Order minimum is ' + money(SB.orderMin) + '. Add ' + money(SB.orderMin - t.total) + ' more.'
       : '';
     checkoutBtn.disabled = t.count === 0 || belowMin || !SB.ordersOpen;
-    checkoutBtn.textContent = SB.ordersOpen ? 'Check out' : 'Sold out';
+    checkoutBtn.textContent = SB.ordersOpen ? 'Check out'
+      : (SB.launchDate && SB.launchDate > new Date()) ? 'Opening Aug 6' : 'Sold out';
   }
 
   items.forEach(function (it) {

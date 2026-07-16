@@ -214,6 +214,7 @@ a.menu-card:hover {
 .card-plum    { background: var(--plum); color: var(--cream); }
 .ph-olive { background: repeating-linear-gradient(45deg, #647142 0 12px, #697646 12px 24px); }
 .ph-plum  { background: repeating-linear-gradient(45deg, #8f6495 0 12px, #946999 12px 24px); }
+.ph-red   { background: repeating-linear-gradient(45deg, #c34527 0 12px, #cb4a2b 12px 24px); }
 
 /* ==========================================================================
    Home: signup card
@@ -259,70 +260,23 @@ a.menu-card:hover {
 .ticket p { font: 400 13.5px/1.6 var(--font-body); color: #6b6558; margin: 0; }
 
 /* ==========================================================================
-   Home: split row, Sasha intro (left) / jukebox with record sleeve (right)
+   Home: Sasha intro row
    ========================================================================== */
 .split-row {
-  display: grid; grid-template-columns: 1fr 1.15fr;
   border-top: 2px solid var(--ink); background: var(--cream);
 }
 .sasha-cell {
-  padding: 34px 32px 34px var(--gutter);
-  display: flex; gap: 20px; align-items: center;
-  border-right: 2px solid var(--ink);
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 34px var(--gutter);
+  display: flex; gap: 22px; align-items: center;
 }
 .sasha-photo {
-  width: 74px; height: 74px; flex: none; border-radius: 50%; object-fit: cover;
+  width: 88px; height: 88px; flex: none; border-radius: 50%; object-fit: cover;
   background: repeating-linear-gradient(45deg, #efe4c9 0 10px, #f4ebd5 10px 20px);
-  display: flex; align-items: center; justify-content: center;
-  font: 500 9px var(--font-body); color: #8a8272; text-align: center; line-height: 1.4;
 }
-.sasha-cell .intro { font: 400 14.5px/1.65 var(--font-body); }
+.sasha-cell .intro { font: 400 15px/1.65 var(--font-body); max-width: 620px; }
 .sasha-cell .intro strong { font: 700 13px var(--font-display); letter-spacing: 1px; text-transform: uppercase; }
 .sasha-cell .intro a { color: var(--red); font-weight: 600; }
-
-.jukebox-cell {
-  background: var(--mustard);
-  padding: 28px var(--gutter) 28px 32px;
-  display: flex; gap: 24px; align-items: center;
-}
-.sleeve-link { position: relative; flex: none; display: block; width: 150px; height: 104px; text-decoration: none; }
-.record45 {
-  position: absolute; right: 0; top: 9px; width: 86px; height: 86px; border-radius: 50%;
-  background: repeating-radial-gradient(circle, #221f1b 0 3px, #2e2a24 3px 6px);
-  display: flex; align-items: center; justify-content: center;
-  animation: vinyl-spin 4s linear infinite;
-}
-.record45-label {
-  width: 30px; height: 30px; border-radius: 50%; background: var(--red);
-  display: flex; align-items: center; justify-content: center;
-}
-.record45-label::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--mustard); }
-@keyframes vinyl-spin { to { transform: rotate(360deg); } }
-.sleeve {
-  position: absolute; left: 0; top: 0; width: 104px; height: 104px;
-  background: var(--red); border: 2px solid var(--ink); border-radius: 4px;
-  box-shadow: 4px 4px 0 rgba(51, 48, 42, .3);
-  display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0 10px;
-}
-.sleeve .s1 { font: 700 10px var(--font-display); letter-spacing: 1px; text-transform: uppercase; color: var(--cream); }
-.sleeve .s2 { font: 700 13px var(--font-display); letter-spacing: 1px; text-transform: uppercase; color: var(--cream); }
-.sleeve .s3 { font: 600 9px var(--font-body); color: var(--cream); opacity: .8; }
-.jukebox-stack { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
-.jukebox-eyebrow { font: 700 11px var(--font-display); letter-spacing: 2px; text-transform: uppercase; color: var(--red); }
-.jukebox-track { font: 700 17px var(--font-display); letter-spacing: .5px; text-transform: uppercase; color: var(--ink); }
-.spin-btn {
-  font: 700 11px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase;
-  background: var(--red); color: var(--cream); border: none;
-  padding: 9px 16px; border-radius: 6px; cursor: pointer;
-  box-shadow: 2px 2px 0 var(--ink);
-  transition: background-color .18s ease;
-}
-.spin-btn:hover { background: #c04324; color: var(--cream); opacity: 1; }
-@media (max-width: 900px) {
-  .split-row { grid-template-columns: 1fr; }
-  .sasha-cell { border-right: none; border-bottom: 2px solid var(--ink); }
-}
-@media (prefers-reduced-motion: reduce) { .record45 { animation: none; } }
 
 /* ==========================================================================
    About page
@@ -407,7 +361,7 @@ a.menu-card:hover {
 .paper-face .tape-left { top: -11px; left: -16px; transform: rotate(-42deg); }
 .paper-face .tape-right { top: -11px; right: -16px; transform: rotate(42deg); }
 .paper-face .sign-open-word { font: 700 46px var(--font-display); letter-spacing: 4px; color: var(--ink); }
-.paper-face .sign-soldout-word { font: 700 36px var(--font-display); letter-spacing: 3px; color: #F8532C; text-align: center; }
+.paper-face .sign-soldout-word { font: 700 30px var(--font-display); letter-spacing: 2px; color: #F8532C; text-align: center; }
 .paper-face .sign-scrawl { font: 400 19px 'Permanent Marker', cursive; color: var(--ink); transform: rotate(-1.5deg); }
 @media (prefers-reduced-motion: reduce) { .paper-flipper { transition: none; } }
 
