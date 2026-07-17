@@ -240,17 +240,46 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
   }, 10000);
 })();
 
-// --- "Never miss a bake" newsletter signup ---
-// TODO: wire to a real email marketing backend (Mailchimp, Klaviyo).
+// --- Email signup + product notify forms -> Brevo (every .signup-form) ---
+// The forms keep their own styling but POST natively into a hidden iframe, so
+// the visitor stays on the page. EMAIL, the email_address_check honeypot, and
+// locale are the fields Brevo's embed expects; the serve URL is the list token.
 (function () {
   var forms = document.querySelectorAll('.signup-form');
+  if (!forms.length) return;
+  var BREVO = 'https://3023a9d9.sibforms.com/serve/MUIFAONlAZf281M_vSokMPkwn6g383SbWA5kDdflsLIiGS39IzIUO3IbfEx4o6Y0KskpkTSwXn87Rbp9Yl1IFWUhkBS353qAlvmPWPQsJekDp1mOZuzCR05uCYZmJSQ9hjRrQgAbFETXLt7mc_7rAU3auj2ec0EHYgEvDh4rngWz3HtrMvW7QT1uBXq3f9vrRdYbghOjkCE2sMkDrg==';
+
+  // One hidden sink catches Brevo's response so the page never navigates away.
+  var sink = document.createElement('iframe');
+  sink.name = 'brevo-sink';
+  sink.setAttribute('aria-hidden', 'true');
+  sink.style.display = 'none';
+  document.body.appendChild(sink);
+
+  function ensureHidden(form, name, value) {
+    if (form.querySelector('[name="' + name + '"]')) return;
+    var i = document.createElement('input');
+    i.type = 'hidden'; i.name = name; i.value = value;
+    form.appendChild(i);
+  }
+
   forms.forEach(function (form) {
+    form.action = BREVO;
+    form.method = 'POST';
+    form.target = 'brevo-sink';
+    var email = form.querySelector('input[type="email"], input[type="text"]');
+    if (email) { email.name = 'EMAIL'; email.type = 'email'; email.required = true; }
+    ensureHidden(form, 'email_address_check', ''); // Brevo honeypot; must stay empty
+    ensureHidden(form, 'locale', 'en');
+
     var button = form.querySelector('button');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var original = button.textContent;
-      button.textContent = 'Coming soon!';
-      setTimeout(function () { button.textContent = original; }, 2500);
+    form.addEventListener('submit', function () {
+      // Native (valid-only) submit proceeds into the iframe; confirm and lock it
+      // (single opt-in, so no "check your inbox" step). Stays put until reload.
+      if (!button || button.dataset.busy) return;
+      button.dataset.busy = '1';
+      button.textContent = "Thanks, you're on the list!";
+      button.disabled = true;
     });
   });
 })();

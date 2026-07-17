@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sasha's Bakeshop — brand stylesheet
+   Sasha's Bakeshop - brand stylesheet
    --------------------------------------------------------------------------
    Implements the design handoff (playful hand-cut letterpress):
    cream bg, ink text/borders, red-orange primary, mustard accent,
@@ -237,6 +237,8 @@ a.menu-card:hover {
   background: var(--red); color: var(--cream); border: none; padding: 15px 26px;
   border-radius: 8px; cursor: pointer;
 }
+/* Locked "you're on the list" confirmation state (Brevo submit) */
+.signup-form button:disabled { background: var(--olive); color: var(--cream); opacity: 1; cursor: default; }
 
 /* ==========================================================================
    Home: how it works (ticket stubs on olive, design handoff 2c)
