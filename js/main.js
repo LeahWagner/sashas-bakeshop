@@ -50,9 +50,31 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
         '</span><span class="msg">✶</span>';
     }).join('');
   }
-  track.innerHTML = seq() + seq(); // duplicated for a seamless -50% loop
   ticker.appendChild(track);
   document.body.insertBefore(ticker, document.body.firstChild);
+
+  // The -50% loop only reads as seamless if each half is at least as wide as
+  // the viewport, otherwise a blank gap sweeps through once per cycle. Repeat
+  // the sequence until a half covers the screen, then set the duration from
+  // the measured width so it scrolls at the same speed at every size.
+  var PX_PER_SEC = 40; // scroll rate, held constant across viewport sizes
+  var slow = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var unitHTML = seq(), lastW = -1;
+
+  function layout() {
+    var w = window.innerWidth;
+    if (w === lastW) return;
+    lastW = w;
+    track.style.animation = 'none';
+    track.innerHTML = unitHTML;
+    updateCount(); // the countdown text is part of the width being measured
+    var one = track.scrollWidth;
+    if (!one) return;
+    var reps = Math.max(1, Math.ceil(w / one));
+    track.innerHTML = unitHTML.repeat(reps * 2); // two halves for the -50% loop
+    updateCount();
+    if (!slow) track.style.animation = 'ticker-scroll ' + (one * reps / PX_PER_SEC) + 's linear infinite';
+  }
 
   function nextDrop() {
     var now = new Date();
@@ -78,7 +100,12 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
     var txt = (d ? d + 'd ' : '') + h + 'h ' + ('0' + m).slice(-2) + 'm';
     els.forEach(function (e) { e.textContent = txt; });
   }
-  updateCount();
+  layout();
+  window.addEventListener('resize', layout);
+  // Hot House swaps in after first paint and changes the measured width.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { lastW = -1; layout(); });
+  }
   setInterval(updateCount, 30000);
 })();
 
@@ -151,21 +178,25 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
     };
   }
 
-  var canvas, ctx, scale, advances = [], unit = 600;
+  var canvas, ctx, scale, ox = 0, oy = 0, advances = [], unit = 600;
 
   function resize() {
     var dpr = window.devicePixelRatio || 1;
-    var w = band.clientWidth, h = Math.round(w * VBH / VBW);
+    // The band's height comes from CSS now, so mirror the SVG's
+    // preserveAspectRatio="xMidYMid slice": cover the box and center it.
+    var w = band.clientWidth, h = band.clientHeight;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-    scale = w / VBW * dpr;
+    scale = Math.max(w / VBW, h / VBH) * dpr;
+    ox = (w * dpr - VBW * scale) / 2;
+    oy = (h * dpr - VBH * scale) / 2;
     ctx = canvas.getContext('2d');
   }
 
   function measure() {
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.setTransform(scale, 0, 0, scale, ox, oy);
     ctx.font = FONT;
     advances = [];
     unit = 0;
@@ -181,8 +212,9 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
     if (last) off -= (now - last) * SPEED;
     last = now;
     while (off <= -unit) off += unit;
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    ctx.clearRect(-250, -10, VBW + 500, VBH + 20);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(scale, 0, 0, scale, ox, oy);
     ctx.font = FONT;
     ctx.fillStyle = '#33302a';
     ctx.textAlign = 'center';

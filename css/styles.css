@@ -62,13 +62,15 @@ a:hover, button:hover { opacity: .85; }
 /* ==========================================================================
    Announcement ticker (injected above the header by js/main.js)
    ========================================================================== */
-.ticker { background: var(--plum); color: var(--cream); overflow: hidden; border-bottom: 2px solid var(--ink); }
+/* line-height 0 kills the inline strut under the inline-flex track, which
+   otherwise leaves a ragged few px of plum below the messages. */
+.ticker { background: var(--plum); color: var(--cream); overflow: hidden; border-bottom: 2px solid var(--ink); line-height: 0; }
 .ticker-track {
-  display: inline-flex; align-items: center; white-space: nowrap;
-  padding: 8px 0; animation: ticker-scroll 36s linear infinite; will-change: transform;
+  display: inline-flex; align-items: center; white-space: nowrap; vertical-align: top;
+  padding: 8px 0; will-change: transform; /* duration + repeats set by js/main.js */
 }
 .ticker .msg {
-  font: 700 11px var(--font-display); letter-spacing: 2px; text-transform: uppercase;
+  font: 700 11px/1.4 var(--font-display); letter-spacing: 2px; text-transform: uppercase;
   margin: 0 22px; flex: none;
 }
 .ticker .tick-count { color: var(--mustard); }
@@ -173,8 +175,11 @@ a:hover, button:hover { opacity: .85; }
 /* ==========================================================================
    Home: mainstays squiggle band
    ========================================================================== */
-.squiggle-band { background: var(--cream); overflow: hidden; }
-.squiggle-band svg { display: block; width: 100%; height: auto; }
+/* 8.125vw is the viewBox aspect (130/1600), so above ~1180px the band is exactly
+   the natural height and nothing is cropped. Below that the 96px floor takes
+   over and the wave is sliced left/right instead of shrunk. */
+.squiggle-band { background: var(--cream); overflow: hidden; position: relative; height: max(96px, 8.125vw); }
+.squiggle-band svg { display: block; width: 100%; height: 100%; }
 .squiggle-band text {
   font: 700 26px var(--font-display); letter-spacing: 5px; text-transform: uppercase;
   fill: var(--ink);
@@ -612,8 +617,8 @@ a.menu-card:hover {
   .footer-top { grid-template-columns: 1fr; gap: 36px; }
   .footer-cols { border-left: none; padding-left: 0; border-top: 2px dotted rgba(51, 48, 42, .5); padding-top: 32px; }
 }
-@media (max-width: 560px) {
-  .footer-cols { grid-template-columns: 1fr 1fr; }
+@media (max-width: 620px) {
+  .footer-cols { grid-template-columns: 1fr 1fr; padding-top: 26px; }
 }
 
 /* ==========================================================================
@@ -624,17 +629,83 @@ a.menu-card:hover {
   .hero-copy { padding: 48px var(--gutter) 8px; }
   .hero-copy h1 { font-size: 40px; }
   .hero-art { padding: 32px var(--gutter) 40px; }
-  .hero-panel { min-height: 280px; }
+  .hero-panel, .hero-carousel { min-height: 300px; }
   .menu-grid { grid-template-columns: 1fr 1fr; }
   .how-grid { grid-template-columns: 1fr; gap: 20px; }
   .story, .contact-grid, .checkout-grid { grid-template-columns: 1fr; gap: 36px; }
   .order-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 560px) {
-  .menu-grid { grid-template-columns: 1fr; }
-  .nav-links { gap: 18px; }
+
+/* Phones: the nav links get their own full-width row under the wordmark rather
+   than wrapping raggedly, and every fixed-width control goes fluid. */
+@media (max-width: 620px) {
+  .nav { padding: 14px var(--gutter); gap: 12px; }
+  .brand-name { font-size: 18px; }
+  .mini-sign { margin-left: 10px; font-size: 9px; padding: 4px 9px 3px; }
+  .mini-sign.is-closed { font-size: 10px; padding: 5px 10px 4px; }
+  /* Stays wrappable: if a narrow phone can't fit all four, Preorder drops to a
+     second row rather than pushing the page into horizontal scroll. */
+  .nav-links {
+    width: 100%; gap: 8px; justify-content: space-between;
+    font-size: 11.5px; letter-spacing: 1px;
+  }
+  .nav-links a { white-space: nowrap; }
+  .nav-links .btn-nav { padding: 9px 15px; }
+
+  .ticker .msg { font-size: 10px; letter-spacing: 1.5px; margin: 0 14px; }
+
+  .band-inner { padding: 36px var(--gutter); }
   .band h1 { font-size: 32px; }
+  .hero-copy { padding-top: 40px; }
   .hero-copy h1 { font-size: 34px; }
+  .hero-carousel, .hero-panel { min-height: 240px; }
+  .hero-copy .btn { align-self: stretch; text-align: center; }
+
+  .menu-grid { padding: 32px var(--gutter); gap: 14px; }
+  .menu-card h3 { margin: 12px 8px 5px; }
+  .menu-card p { padding: 0 10px; }
+
+  /* Fluid inputs: the 240px field used to push the button onto its own ragged line */
+  .signup-card { padding: 24px 22px; }
+  .signup-form { width: 100%; }
+  .signup-form input { width: 100%; flex: 1 1 100%; min-width: 0; }
+  .signup-form button { width: 100%; }
+
+  .how-inner { padding: 32px var(--gutter) 40px; }
+  .tickets { gap: 16px; }
+  .ticket:nth-child(2) { margin-top: 0; }
+  .sasha-cell { gap: 16px; }
+  .sasha-photo { width: 64px; height: 64px; }
+
+  .story, .faq-list, .journal-list, .post-body, .contact-grid,
+  .checkout-grid, .product-grid, .order-grid { padding-top: 36px; padding-bottom: 36px; }
+
+  /* Preorder: bigger tap targets, photo doesn't crowd out the description */
+  .order-photo { width: 104px; }
+  .order-body { padding: 16px; }
+  .stepper button { width: 40px; height: 40px; }
+  .cart-bar { padding: 22px; }
+  .cart-right { width: 100%; justify-content: space-between; }
+  .cart-bar .checkout { flex: 1; }
+  /* .paper-flipper keeps its fixed 270px: its faces are absolutely positioned,
+     so a percentage width has nothing to resolve against and collapses to 0.
+     270px still fits inside the gutters down to a 320px viewport. */
+
+  .note-card { padding: 24px 22px; }
+  .contact-card { padding: 22px 20px; }
+
+  .mega-footer { padding-top: 40px; }
+  .footer-top { padding-bottom: 32px; }
+  .mega-brand { margin-top: 32px; }
+}
+/* Small phones (iPhone SE / mini): shrink the nav a step further so the four
+   links still share one row, and drop the menu to a single column. */
+@media (max-width: 400px) {
+  .nav-links { font-size: 10.5px; letter-spacing: .5px; gap: 6px; }
+  .nav-links .btn-nav { padding: 8px 12px; }
+}
+@media (max-width: 340px) {
+  .menu-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

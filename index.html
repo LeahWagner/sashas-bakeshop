@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=18" />
+  <link rel="stylesheet" href="css/styles.css?v=19" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -89,7 +89,10 @@
 
     <!-- mainstays squiggle band -->
     <div class="squiggle-band" aria-label="The mainstays">
-      <svg viewBox="0 0 1600 130" role="presentation">
+      <!-- slice, not fit: on narrow screens the band keeps its height and the
+           wave scrolls off the sides, instead of the whole thing shrinking to
+           a 30px ribbon with unreadable text. js/main.js mirrors this math. -->
+      <svg viewBox="0 0 1600 130" preserveAspectRatio="xMidYMid slice" role="presentation">
         <path id="mainstay-squiggle" d="M -200 65 Q -100 20, 0 65 T 200 65 T 400 65 T 600 65 T 800 65 T 1000 65 T 1200 65 T 1400 65 T 1600 65 T 1800 65 T 2000 65" fill="none" stroke="#e6a832" stroke-width="62" stroke-linecap="round"></path>
         <!-- No dominant-baseline: Safari and Chrome disagree on it. The translate
              centers glyphs on the stroke geometrically (measured from font metrics). -->
@@ -214,6 +217,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=18"></script>
+  <script src="js/main.js?v=19"></script>
 </body>
 </html>
