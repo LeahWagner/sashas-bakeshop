@@ -1,3 +1,9 @@
 .DS_Store
 node_modules/
 *.log
+
+# Full-res camera originals. The optimized 1200px web versions next to them are
+# what ship; keep these on disk for future re-crops but out of git history.
+assets/coffee-cake.JPG
+assets/coffee-cake-2.JPG
+assets/cropped.jpg
