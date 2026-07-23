@@ -7,7 +7,7 @@ var SB = {
   // is off and everything counts down to launch. Flip to true on launch day.
   ordersOpen: false,
   // First drop drives the launch countdown in the ticker + signs.
-  launchDate: new Date(2026, 7, 6, 9, 0, 0), // Aug 6, 2026 (Thu), 9am (month is 0-indexed)
+  launchDate: new Date(2026, 7, 20, 9, 0, 0), // Aug 20, 2026 (Thu), 9am (month is 0-indexed)
   orderMin: 12,      // minimum order total ($)
   deliveryMin: 35,   // minimum order total for delivery ($)
   // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
@@ -22,9 +22,9 @@ var SB = {
     'the newsletter gets the menu first'
   ],
   announcementsClosed: [
-    'first drop thursday august 6',
+    'grand opening thursday august 20',
     'launching in {countdown}',
-    'preorders open august 6',
+    'preorders open august 20',
     'the newsletter gets the menu first'
   ]
 };
@@ -32,6 +32,12 @@ var SB = {
 // Preview trick: append ?preview=closed to any page URL to see the sold-out
 // state (signs, favicon, notify-me forms) without changing the real config.
 if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
+
+// Early-access pages (private, unlisted direct link) open ordering ahead of the
+// public launch. Scoped to pages that opt in with <body data-early>, so nothing
+// else on the site is affected. Runs before the ticker/sign/preorder logic below
+// so the whole page reads as "open" for the invited buyer.
+if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = true;
 
 // --- Announcement ticker above the header (every page) ---
 (function () {
@@ -113,13 +119,16 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
 (function () {
   var brand = document.querySelector('.brand');
   if (!brand) return;
+  // Early-access pages are self-contained; no mini-sign linking back into the
+  // public shop (it would also mislabel the private page as publicly "open").
+  if (document.body && document.body.hasAttribute('data-early')) return;
   var prefix = /\/(posts|products)\//.test(location.pathname) ? '../' : '';
   var preLaunch = SB.launchDate && SB.launchDate > new Date();
   var sign = document.createElement('a');
   sign.className = 'mini-sign' + (SB.ordersOpen ? '' : ' is-closed');
   sign.href = prefix + 'preorder.html';
   sign.textContent = SB.ordersOpen ? 'Orders open' : (preLaunch ? 'Opening soon' : 'Sold out');
-  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : (preLaunch ? 'Opening soon, first drop August 6' : 'Sold out, orders open Thursday'));
+  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : (preLaunch ? 'Opening soon, grand opening August 20' : 'Sold out, orders open Thursday'));
   brand.after(sign);
 })();
 
@@ -394,7 +403,7 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
       var left = it.stock - it.qty;
       it.qtyEl.textContent = it.qty;
       it.stockEl.textContent =
-        left <= 0 ? 'Sold out for you!' :
+        left <= 0 ? 'Sold out.' :
         left <= 4 ? 'Only ' + left + ' left!' :
         left + ' left';
       it.stockEl.classList.toggle('is-low', left <= 4);
@@ -414,7 +423,7 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
       : '';
     checkoutBtn.disabled = t.count === 0 || belowMin || !SB.ordersOpen;
     checkoutBtn.textContent = SB.ordersOpen ? 'Check out'
-      : (SB.launchDate && SB.launchDate > new Date()) ? 'Opening Aug 6' : 'Sold out';
+      : (SB.launchDate && SB.launchDate > new Date()) ? 'Opening Aug 20' : 'Sold out';
   }
 
   items.forEach(function (it) {
