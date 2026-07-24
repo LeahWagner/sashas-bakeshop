@@ -44,6 +44,21 @@ if (/[?&]preview=closed\b/.test(location.search)) SB.ordersOpen = false;
 // so the whole page reads as "open" for the invited buyer.
 if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = true;
 
+// --- Cloudflare Web Analytics (cookieless), site-wide, with a personal opt-out ---
+// Visit any page with ?noanalytics=1 once per device to stop counting yourself.
+(function () {
+  try {
+    if (/[?&]noanalytics=1\b/.test(location.search)) localStorage.setItem('sb-noanalytics', '1');
+    if (localStorage.getItem('sb-noanalytics') === '1') return; // your own devices
+  } catch (e) { /* localStorage blocked; just count normally */ }
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return; // local previews
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  s.setAttribute('data-cf-beacon', '{"token": "855ab77a256a49a4b2dd5a94611864df"}');
+  (document.head || document.documentElement).appendChild(s);
+})();
+
 // --- Announcement ticker above the header (every page) ---
 (function () {
   var msgs = SB.ordersOpen ? SB.announcementsOpen : SB.announcementsClosed;
