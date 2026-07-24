@@ -14,6 +14,10 @@ var SB = {
   // page; buyers confirm quantities on Stripe's hosted page. Note: preorder stays
   // gated (ordersOpen:false) until launch, so only early-access checks out today.
   paymentLink: 'https://buy.stripe.com/aFabJ07rCbSvbxt1sm2VG01',
+  // Option B checkout: Cloudflare Worker that builds a Stripe Checkout Session
+  // with exact cart quantities + delivery. Used on the early-access page when
+  // set; empty string falls back to the Payment Link above so nothing breaks.
+  checkoutEndpoint: 'https://sashas-checkout.sasharoach02.workers.dev',
   // Ticker announcements. {countdown} is replaced with a live countdown:
   // to launch while pre-launch, then to the next Thursday 9am drop.
   announcementsOpen: [
@@ -377,6 +381,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
 
   var items = cards.map(function (card) {
     return {
+      id: card.dataset.id,
       price: parseFloat(card.dataset.price),
       stock: parseInt(card.dataset.stock, 10),
       qty: 0,
@@ -436,10 +441,46 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
     });
   });
 
+  // The early-access page carries exact quantities through the Worker; every
+  // other page still hands off to the Payment Link (quantities confirmed there).
+  var useWorker = SB.checkoutEndpoint && document.body && document.body.hasAttribute('data-early');
+
+  function fulfillmentChoice() {
+    var sel = document.querySelector('input[name="fulfillment"]:checked');
+    return sel ? sel.value : 'pickup';
+  }
+
   checkoutBtn.addEventListener('click', function () {
     var t = totals();
     if (t.count === 0 || t.total < SB.orderMin || !SB.ordersOpen) return;
-    // Payment happens on Stripe's hosted page; quantities are confirmed there.
+
+    if (useWorker) {
+      var payload = {
+        fulfillment: fulfillmentChoice(),
+        items: items.filter(function (it) { return it.qty > 0; })
+          .map(function (it) { return { id: it.id, qty: it.qty }; })
+      };
+      var prev = checkoutBtn.textContent;
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Taking you to checkout…';
+      if (cartNote) cartNote.textContent = '';
+      fetch(SB.checkoutEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.url) { window.location.href = d.url; return; } // navigates away
+        throw new Error((d && d.error) || 'Checkout failed');
+      }).catch(function (err) {
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = prev;
+        if (cartNote) cartNote.textContent = 'Sorry, checkout had a hiccup. Please try again.';
+        if (window.console) console.error('Checkout error:', err);
+      });
+      return;
+    }
+
+    // Fallback: Stripe Payment Link; quantities are confirmed on Stripe.
     window.location.href = SB.paymentLink;
   });
 

@@ -32,6 +32,9 @@
     @media (min-width: 641px) {
       .order-grid .order-card { min-height: 224px; }
     }
+    .cart-bar .fulfillment { display: flex; gap: 16px; margin-top: 12px; font: 600 13px var(--font-body); }
+    .cart-bar .fulfillment label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .cart-bar .fulfillment input { accent-color: var(--red); }
   </style>
 </head>
 <body data-early="1">
@@ -57,7 +60,7 @@
 
     <!-- order grid -->
     <section class="order-grid">
-      <div class="order-card" data-price="18" data-stock="8">
+      <div class="order-card" data-id="tahini-cookies" data-price="18" data-stock="8">
         <div class="order-photo" style="background-color:#e6a832;background-image:url('assets/cookie-melty.jpg')" role="img" aria-label="Tahini chocolate chip cookies"></div>
         <div class="order-body">
           <div class="order-title-row">
@@ -76,7 +79,7 @@
         </div>
       </div>
 
-      <div class="order-card" data-price="28" data-stock="3">
+      <div class="order-card" data-id="coffee-cake" data-price="28" data-stock="3">
         <div class="order-photo" style="background-color:#6f7d4a;background-image:url('assets/coffee-cake-mug.jpg');background-position:60% center" role="img" aria-label="Hazelnut streusel coffee cake"></div>
         <div class="order-body">
           <div class="order-title-row">
@@ -95,7 +98,7 @@
         </div>
       </div>
 
-      <div class="order-card" data-price="42" data-stock="3">
+      <div class="order-card" data-id="weekend-box" data-price="42" data-stock="3">
         <div class="order-photo" style="background-color:#6f7d4a;background-image:url('assets/card-revised.png?v=1');background-position:85% center" role="img" aria-label="Coffee cake, tahini cookies, and a peek at what's coming next, the weekend box"></div>
         <div class="order-body">
           <div class="order-title-row">
@@ -120,6 +123,10 @@
           <div class="cart-label" id="cart-label">Your box is empty</div>
           <div class="cart-sub" id="cart-sub">Pick one (or a few).</div>
           <div class="cart-note" id="cart-note"></div>
+          <div class="fulfillment" role="radiogroup" aria-label="Pickup or delivery">
+            <label><input type="radio" name="fulfillment" value="pickup" checked /> Pickup</label>
+            <label><input type="radio" name="fulfillment" value="delivery" /> Delivery</label>
+          </div>
         </div>
         <div class="cart-right">
           <div class="cart-total" id="cart-total">$0</div>
@@ -127,7 +134,7 @@
         </div>
       </div>
 
-      <div class="order-fine-print">Early access, just for you, ahead of the August 20 grand opening. Checkout is a secure Stripe page, confirm your quantities there. All orders are paid ahead.<br />Questions about an order? Email <a href="mailto:info@sashasbakeshop.com">info@sashasbakeshop.com</a></div>
+      <div class="order-fine-print">Early access, just for you, ahead of the August 20 grand opening. Checkout is a secure Stripe page. All orders are paid ahead.<br />Questions about an order? Email <a href="mailto:info@sashasbakeshop.com">info@sashasbakeshop.com</a></div>
     </section>
   </main>
 
@@ -162,6 +169,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=23"></script>
+  <script src="js/main.js?v=25"></script>
 </body>
 </html>

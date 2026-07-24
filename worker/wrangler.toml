@@ -1,0 +1,6 @@
+name = "sashas-checkout"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Secret (do NOT put the key here — set it with wrangler so it stays out of git):
+#   npx wrangler secret put STRIPE_SECRET_KEY
