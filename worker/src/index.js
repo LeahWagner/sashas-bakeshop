@@ -66,6 +66,15 @@ export default {
     params.set('metadata[fulfillment]', fulfillment);
     params.set('metadata[source]', 'early-access');
 
+    // Optional "notes for Sasha" box on the Stripe checkout page (allergies,
+    // pickup timing, etc.). Shows up on the session in the Stripe dashboard.
+    params.set('custom_fields[0][key]', 'notes');
+    params.set('custom_fields[0][label][type]', 'custom');
+    params.set('custom_fields[0][label][custom]', 'Notes for Sasha (allergies, timing, anything)');
+    params.set('custom_fields[0][type]', 'text');
+    params.set('custom_fields[0][optional]', 'true');
+    params.set('custom_fields[0][text][maximum_length]', '255');
+
     // Build validated line items from the server-side catalog.
     let subtotal = 0, i = 0;
     for (const it of items) {
