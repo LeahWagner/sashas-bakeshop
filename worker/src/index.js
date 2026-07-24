@@ -10,7 +10,7 @@
 // (the live sk_live_… key). It is read from env at runtime and never shipped.
 
 const CATALOG = {
-  'tahini-cookies': { name: 'Half dozen tahini chocolate chip cookies', amount: 1800 },
+  'tahini-cookies': { name: 'Half dozen tahini chocolate chunk cookies', amount: 1800 },
   'coffee-cake':    { name: 'Hazelnut streusel coffee cake (9" round)',  amount: 2800 },
   'weekend-box':    { name: 'The weekend box',                           amount: 4200 },
 };
