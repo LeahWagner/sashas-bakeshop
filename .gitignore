@@ -2,6 +2,11 @@
 node_modules/
 *.log
 
+# Cloudflare Worker local state (wrangler cache, build output, local secrets)
+worker/.wrangler/
+worker/.dev.vars
+worker/node_modules/
+
 # Full-res camera originals. The optimized 1200px web versions next to them are
 # what ship; keep these on disk for future re-crops but out of git history.
 assets/coffee-cake.JPG
