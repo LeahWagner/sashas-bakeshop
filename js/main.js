@@ -9,10 +9,11 @@ var SB = {
   // First drop drives the launch countdown in the ticker + signs.
   launchDate: new Date(2026, 7, 20, 9, 0, 0), // Aug 20, 2026 (Thu), 9am (month is 0-indexed)
   orderMin: 12,      // minimum order total ($)
-  deliveryMin: 35,   // minimum order total for delivery ($)
-  // Stripe Payment Link for this week's drop (currently TEST mode; swap for the
-  // live-mode link when Sasha's Stripe account goes live).
-  paymentLink: 'https://buy.stripe.com/test_aFacN4285fsJ1Nh4r82ZO01',
+  freeDeliveryOver: 50, // free delivery at/above this total ($); below it a delivery fee applies at checkout
+  // Stripe Payment Link (LIVE). Shared by the preorder cart and the early-access
+  // page; buyers confirm quantities on Stripe's hosted page. Note: preorder stays
+  // gated (ordersOpen:false) until launch, so only early-access checks out today.
+  paymentLink: 'https://buy.stripe.com/aFabJ07rCbSvbxt1sm2VG01',
   // Ticker announcements. {countdown} is replaced with a live countdown:
   // to launch while pre-launch, then to the next Thursday 9am drop.
   announcementsOpen: [
@@ -414,7 +415,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
       : 'Your box · ' + t.count + (t.count === 1 ? ' treat' : ' treats');
     cartSub.textContent = t.count === 0
       ? 'Add something little (or a lot).'
-      : 'Pickup Saturday 10am to 1pm, SE Portland. Delivery over ' + money(SB.deliveryMin) + '.';
+      : 'Pickup Saturday 10am to 1pm, SE Portland. Free delivery over ' + money(SB.freeDeliveryOver) + ', otherwise a fee.';
     cartTotal.textContent = money(t.total);
 
     var belowMin = t.count > 0 && t.total < SB.orderMin;
