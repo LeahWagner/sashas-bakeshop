@@ -16,7 +16,7 @@ const CATALOG = {
 };
 
 const FREE_DELIVERY_OVER = 5000; // cents — free delivery at/above $50
-const DELIVERY_FEE       = 1000; // cents — $10 delivery under the threshold
+const DELIVERY_FEE       = 500;  // cents — $5 delivery under the threshold
 const MAX_QTY            = 20;   // per-line sanity cap
 
 const SITE = 'https://sashasbakeshop.com';
