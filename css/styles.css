@@ -9,7 +9,8 @@
 
 @font-face {
   font-family: 'Hot House';
-  src: url('../assets/hothouse-bold.ttf') format('truetype');
+  src: url('../assets/hothouse-bold.woff2') format('woff2'),
+       url('../assets/hothouse-bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -44,6 +45,10 @@ body {
 }
 main { flex: 1; }
 img { display: block; max-width: 100%; height: auto; }
+
+/* Accessibility: keyboard "skip to content" link, hidden until focused. */
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 200; background: var(--ink); color: var(--cream); padding: 10px 16px; border-radius: 0 0 8px 0; font: 600 13px var(--font-body); text-decoration: none; }
+.skip-link:focus { left: 0; }
 a { color: var(--red); }
 a:hover, button:hover { opacity: .85; }
 
@@ -296,7 +301,7 @@ a.menu-card:hover {
 .story p { font: 400 15.5px/1.75 var(--font-body); margin: 0 0 18px; }
 .story p:last-of-type { margin-bottom: 28px; }
 .story-photos { display: flex; flex-direction: column; gap: 18px; }
-.story p.story-footnote { font: 400 12.5px/1.6 var(--font-body); opacity: .65; margin: 26px 0 0; }
+.story p.story-footnote { font: 400 12.5px/1.6 var(--font-body); opacity: .72; margin: 26px 0 0; }
 .framed { width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; border: 3px solid var(--ink); object-fit: cover; }
 .framed-ph {
   background: repeating-linear-gradient(45deg, #efe4c9 0 12px, #f4ebd5 12px 24px);
@@ -315,7 +320,7 @@ a.menu-card:hover {
 .contact-card { border: 2px solid var(--ink); border-radius: 12px; padding: 26px 28px; }
 .contact-card h3 { font: 700 14px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); margin: 0 0 8px; }
 .contact-card .value, .contact-card a.value { font: 600 16px var(--font-body); color: var(--ink); text-decoration: none; }
-.contact-card p { font: 400 13px/1.5 var(--font-body); opacity: .65; margin: 6px 0 0; }
+.contact-card p { font: 400 13px/1.5 var(--font-body); opacity: .72; margin: 6px 0 0; }
 
 .note-card { background: var(--mustard); border: 2px solid var(--ink); border-radius: 12px; padding: 32px; }
 .note-card h3 { font: 700 16px var(--font-display); letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 18px; }
@@ -442,7 +447,7 @@ a.menu-card:hover {
   background: var(--red); color: var(--cream); border: none; padding: 16px 32px;
   border-radius: 8px; cursor: pointer;
 }
-.order-fine-print { grid-column: 1 / -1; font: 400 12.5px/1.6 var(--font-body); opacity: .65; text-align: center; }
+.order-fine-print { grid-column: 1 / -1; font: 400 12.5px/1.6 var(--font-body); opacity: .72; text-align: center; }
 .order-fine-print a { color: var(--red); font-weight: 600; }
 .cart-note { font: 600 12px var(--font-body); color: var(--mustard); margin-top: 6px; }
 .cart-bar .checkout[disabled] { opacity: .45; cursor: not-allowed; }
@@ -460,7 +465,7 @@ a.menu-card:hover {
   background: var(--red); border-radius: 8px; padding: 8px 18px; margin: 0 0 20px;
 }
 .product-copy p { font: 400 15.5px/1.75 var(--font-body); margin: 0 0 18px; }
-.product-meta { font: 600 12.5px var(--font-body); opacity: .65; margin: 0 0 18px; }
+.product-meta { font: 600 12.5px var(--font-body); opacity: .72; margin: 0 0 18px; }
 .back-to-menu { font: 600 14px var(--font-body); color: var(--red); text-decoration: none; display: block; margin-bottom: 16px; }
 
 /* Ingredients + allergens dropdown */
