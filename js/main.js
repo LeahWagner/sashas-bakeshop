@@ -17,7 +17,7 @@ var SB = {
     days: 'Saturday August 8 + Sunday August 9',
     // Hard close for preorders: everything after this is walk-up only. Wednesday
     // leaves Thursday to shop and Friday to prep dough before baking Saturday.
-    preorderDeadline: new Date(2026, 7, 5, 21, 0, 0), // Wed Aug 5, 2026, 9pm
+    preorderDeadline: new Date(2026, 7, 5, 20, 0, 0), // Wed Aug 5, 2026, 8pm
     // Doors open Saturday and the faire wraps Sunday at 5. Between these the site
     // must say "we're here right now", not "sold out" — that's the whole weekend
     // of walk-up traffic, and it's when people search for us.
