@@ -1,0 +1,20 @@
+/* Hothouse Bold — hosted for Brevo's custom font feature.
+   Brevo fetches this file cross-origin, so the src URLs must be absolute. */
+
+@font-face {
+  font-family: 'Hothouse Bold';
+  src: url('https://sashasbakeshop.com/assets/hothouse-bold.woff2') format('woff2'),
+       url('https://sashasbakeshop.com/assets/hothouse-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Same file registered at bold weight too, so text the editor bolds
+   still resolves to Hothouse instead of falling back. */
+@font-face {
+  font-family: 'Hothouse Bold';
+  src: url('https://sashasbakeshop.com/assets/hothouse-bold.woff2') format('woff2'),
+       url('https://sashasbakeshop.com/assets/hothouse-bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
