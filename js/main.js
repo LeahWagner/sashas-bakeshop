@@ -39,13 +39,12 @@ var SB = {
   announcementsOpen: [
     'popup august 8 + 9 ✶ radical harvest craft faire',
     'symbiop garden shop, 3454 se powell, 12 to 5pm',
-    'no thursday drop this week ✶ the popup instead',
-    'limited batches ✶ preorder to be sure ✶ closes in {countdown}'
+    'limited batches ✶ preorder closes in {countdown}'
   ],
   announcementsClosed: [
     'preorders are closed ✶ come find us at the popup',
     'august 8 + 9, 12 to 5pm ✶ symbiop garden shop',
-    'no thursday drop this week ✶ walk up and say hi',
+    'walk up and say hi ✶ 3454 se powell blvd',
     'small batches ✶ come early'
   ],
   // While the faire is actually happening.
