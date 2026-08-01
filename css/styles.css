@@ -24,6 +24,9 @@
   --mustard: #e6a832;
   --olive:   #6f7d4a;
   --plum:    #9a6fa0;
+  /* Darker olive, for green text on cream. Plain --olive only reaches 4:1 there,
+     which is under AA for body sizes; this clears it at 5.6:1. */
+  --olive-deep: #5a6639;
 
   --font-display: 'Hot House', cursive;
   --font-body: 'Work Sans', system-ui, sans-serif;
@@ -451,6 +454,71 @@ a.menu-card:hover {
 .order-fine-print a { color: var(--red); font-weight: 600; }
 .cart-note { font: 600 12px var(--font-body); color: var(--mustard); margin-top: 6px; }
 .cart-bar .checkout[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* Day/fulfillment chips inside the dark cart bar. Shared by the popup preorder
+   page (pick Saturday or Sunday) and early access (pickup or delivery). */
+.cart-bar .fulfillment { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; margin-top: 12px; }
+.cart-bar .fulfillment label {
+  display: flex; flex-direction: column; border: 1.5px solid rgba(250,243,227,.35);
+  border-radius: 10px; padding: 8px 14px; cursor: pointer; line-height: 1.3;
+}
+.cart-bar .fulfillment label:has(input:checked) { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+.cart-bar .fulfillment label:has(input:focus-visible) { outline: 2px solid var(--mustard); outline-offset: 2px; }
+.cart-bar .fulfillment input { position: absolute; opacity: 0; width: 0; height: 0; }
+.cart-bar .fulfillment .t { display: block; font: 700 12px var(--font-body); }
+.cart-bar .fulfillment .s { display: block; font: 400 10.5px var(--font-body); opacity: .7; }
+
+/* ==========================================================================
+   Popup event callouts (homepage hero + preorder band)
+   ========================================================================== */
+.popup-flag {
+  display: inline-block; background: var(--red); color: var(--cream);
+  font: 700 11.5px var(--font-display); letter-spacing: 2px; text-transform: uppercase;
+  padding: 7px 13px 6px; border-radius: 6px; margin-bottom: 16px; rotate: -1.2deg;
+}
+/* .hero-copy is a stretch-aligned flex column, so the chip would run the full
+   width without this — same reason .hero-copy .btn already opts out. */
+.hero-copy .popup-flag { align-self: flex-start; }
+
+/* Special-event hero. Background stays the normal cream; only the accents change
+   — the house red/orange becomes green so the popup reads as something separate
+   without restyling the page. Hover stays in the green family so no orange comes
+   back on interaction. For purple instead, swap --olive → --plum and
+   --olive-deep → #6f4a72. Remove the .hero-band wrapper to restore red. */
+.hero-band.is-popup .popup-flag { background: var(--olive); }
+.hero-band.is-popup .btn { background: var(--olive); }
+.hero-band.is-popup .btn:hover { background: var(--olive-deep); color: var(--cream); }
+.hero-band.is-popup .hero-schedule,
+.hero-band.is-popup .popup-deadline { color: var(--olive-deep); }
+/* The schedule line's 32px bottom margin stacks with the deadline's top margin
+   into a ~50px hole. Tighten it only when the deadline actually follows. */
+.hero-copy .hero-schedule:has(+ .popup-deadline) { margin-bottom: 10px; }
+.hero-copy .popup-deadline { margin: 0 0 28px; }
+/* Scoped past `.band p { margin: 0 }`, which otherwise wins on specificity and
+   collapses these into one run-on block. */
+.popup-where, .band .popup-where { font: 400 15px/1.6 var(--font-body); margin: 18px 0 0; max-width: 480px; }
+.popup-where strong { font-weight: 700; }
+.popup-deadline, .band .popup-deadline { font: 700 14.5px/1.5 var(--font-body); color: var(--mustard); margin: 18px 0 0; max-width: 480px; }
+
+/* Popup band: let the copy run out to about the title's width so the block
+   stops towering — the default 480px measure was forcing 4-line paragraphs.
+   Scoped to .popup-band so early access keeps its narrower column. */
+.popup-band p,
+.popup-band .popup-where,
+.popup-band .popup-deadline { max-width: 850px; }
+.popup-band .band-inner { padding-top: 44px; padding-bottom: 44px; }
+
+/* Plain text, not a badge — but cream rather than mustard. Mustard on this red
+   band is only 2.1:1 contrast (effectively unreadable); cream is 4:1, the same
+   as the rest of the band's copy. Size and weight carry the emphasis. */
+.popup-band .popup-deadline {
+  color: var(--cream);
+  font: 700 16.5px/1.5 var(--font-body);
+  margin-top: 22px;
+}
+/* (Removed the old .band-red/.band-plum mustard override — it sat after the badge
+   rule below and silently won on source order, keeping the deadline yellow. The
+   hero's colour is set by .hero-band.is-popup above.) */
 
 /* ==========================================================================
    Product pages

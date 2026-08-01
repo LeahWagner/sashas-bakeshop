@@ -1,6 +1,6 @@
 # Sasha's Bakeshop — website
 
-Website for Sasha's Bakeshop, a licensed home microbakery in SE Portland, OR. Plain HTML/CSS/vanilla JS, no build step. Implements the brand design handoff (playful hand-cut letterpress).
+Website for Sasha's Bakeshop, a licensed apartment bakery in SE Portland, OR. Plain HTML/CSS/vanilla JS, no build step. Implements the brand design handoff (playful hand-cut letterpress).
 
 ## Pages
 - `index.html` — Home: hero photo carousel, mainstays marquee, clickable menu cards, signup, how it works

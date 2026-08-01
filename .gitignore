@@ -13,3 +13,7 @@ assets/coffee-cake.JPG
 assets/coffee-cake-2.JPG
 assets/cropped.jpg
 assets/coffee-cake-crop.jpg
+# Snickerdoodle shoot originals (~24MB). assets/snickerdoodle-*.jpg are the
+# 1200px versions that ship.
+assets/IMG_*.JPG
+assets/edit-1.jpg

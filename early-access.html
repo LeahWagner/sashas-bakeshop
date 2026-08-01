@@ -25,20 +25,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=20" />
+  <link rel="stylesheet" href="css/styles.css?v=33" />
   <style>
     /* Early-access: keep the three tier cards a uniform height when side by side,
-       so the lone weekend-box card doesn't sit shorter than the top row. */
+       so the lone weekend-box card doesn't sit shorter than the top row.
+       The .cart-bar .fulfillment chips now live in styles.css, shared with the
+       popup preorder page's Saturday/Sunday picker. */
     @media (min-width: 641px) {
       .order-grid .order-card { min-height: 224px; }
     }
-    .cart-bar .fulfillment { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 10px; margin-top: 12px; }
-    .cart-bar .fulfillment label { display: flex; flex-direction: column; border: 1.5px solid rgba(250,243,227,.35); border-radius: 10px; padding: 8px 14px; cursor: pointer; line-height: 1.3; }
-    .cart-bar .fulfillment label:has(input:checked) { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
-    .cart-bar .fulfillment label:has(input:focus-visible) { outline: 2px solid var(--mustard); outline-offset: 2px; }
-    .cart-bar .fulfillment input { position: absolute; opacity: 0; width: 0; height: 0; }
-    .cart-bar .fulfillment .t { display: block; font: 700 12px var(--font-body); }
-    .cart-bar .fulfillment .s { display: block; font: 400 10.5px var(--font-body); opacity: .7; }
   </style>
 </head>
 <body data-early="1">
@@ -57,13 +52,13 @@
       <div class="band-inner">
         <div>
           <h1>Early access</h1>
-          <p>You got here first! A little taste before the grand opening on August 20, in three ways. Pickup Saturday 10am to 1pm in SE Portland, or delivery for a fee (or free for orders above $50!).</p>
+          <p>You got here first! A little taste before we launch at the Radical Harvest popup on August 8 + 9, in three ways. Pickup Saturday 10am to 1pm in SE Portland, or delivery for a fee (or free for orders above $50!).</p>
         </div>
       </div>
     </div>
 
     <!-- order grid -->
-    <section class="order-grid">
+    <section class="order-grid" data-source="early-access" data-empty-note="Pick one (or a few).">
       <div class="order-card" data-id="tahini-cookies" data-price="18" data-stock="8">
         <div class="order-photo" style="background-color:#e6a832;background-image:url('assets/cookie-melty.jpg')" role="img" aria-label="Tahini chocolate chunk cookies"></div>
         <div class="order-body">
@@ -138,14 +133,14 @@
         </div>
       </div>
 
-      <div class="order-fine-print">Early access, just for you, ahead of the August 20 grand opening. Checkout is a secure Stripe page. All orders are paid ahead.<br />Questions about an order? Email <a href="mailto:info@sashasbakeshop.com">info@sashasbakeshop.com</a></div>
+      <div class="order-fine-print">Early access, just for you, ahead of the August 8 + 9 popup launch. Checkout is a secure Stripe page. All orders are paid ahead.<br />Questions about an order? Email <a href="mailto:info@sashasbakeshop.com">info@sashasbakeshop.com</a></div>
     </section>
   </main>
 
   <footer class="mega-footer">
     <div class="footer-top">
       <div class="footer-signup">
-        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland home kitchen every Saturday.</p>
+        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland apartment kitchen every Saturday.</p>
         <p class="footer-label">Email</p>
         <form class="signup-form footer-form">
           <input type="email" placeholder="Your email" aria-label="Email address" />
@@ -173,6 +168,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=26"></script>
+  <script src="js/main.js?v=31"></script>
 </body>
 </html>

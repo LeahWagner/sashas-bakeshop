@@ -13,16 +13,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=20" />
+  <link rel="stylesheet" href="css/styles.css?v=33" />
 </head>
 <body data-early="1">
   <header class="nav">
-    <a class="brand" href="early-access" aria-label="Sasha's Bakeshop early access">
+    <a class="brand" href="/" aria-label="Sasha's Bakeshop, home">
       <span class="brand-name">sasha's bakeshop</span>
     </a>
-    <nav class="nav-links">
-      <span class="btn-nav" aria-current="page">Early access</span>
-    </nav>
   </header>
 
   <main>
@@ -30,7 +27,11 @@
       <div class="band-inner">
         <div>
           <h1>Order confirmed!</h1>
-          <p>Thank you, and thanks for being one of the very first. A receipt is on its way to your email. We'll be in touch about your pickup or delivery for Saturday, 10am to 1pm in SE Portland.</p>
+          <!-- Both the popup preorder and early access land here. The Worker adds
+               ?src= so each buyer reads the pickup details that apply to them. -->
+          <p id="confirm-popup">Thank you, and thanks for being one of the very first! A receipt is on its way to your email, and your box will be bagged with your name on it.</p>
+          <p id="confirm-popup-where" class="popup-where"><strong>Pick it up at our table between 12 and 5pm on the day you chose.</strong><br />SymbiOp Garden Shop, 3454 SE Powell Blvd, at the Radical Harvest Craft Faire. Come say hi!</p>
+          <p id="confirm-early" hidden>Thank you, and thanks for being one of the very first. A receipt is on its way to your email. We'll be in touch about your pickup or delivery for Saturday, 10am to 1pm in SE Portland.</p>
         </div>
       </div>
     </div>
@@ -38,10 +39,24 @@
     <section class="container-narrow" style="padding:48px 0;">
       <div class="order-fine-print" style="font-size:14px;">
         Questions about your order? Email <a href="mailto:info@sashasbakeshop.com">info@sashasbakeshop.com</a>.<br />
-        <a href="early-access">Back to early access</a>
+        <a id="confirm-back" href="/">Back to the bakeshop</a>
       </div>
     </section>
   </main>
+
+  <script>
+    // Early-access buyers get the home-pickup wording; everyone else (the popup)
+    // keeps the default. Inline so the right text is there on first paint.
+    (function () {
+      if (!/[?&]src=early-access\b/.test(location.search)) return;
+      document.getElementById('confirm-popup').hidden = true;
+      document.getElementById('confirm-popup-where').hidden = true;
+      document.getElementById('confirm-early').hidden = false;
+      var back = document.getElementById('confirm-back');
+      back.href = 'early-access';
+      back.textContent = 'Back to early access';
+    })();
+  </script>
 
   <footer class="mega-footer">
     <div class="footer-legal">
@@ -52,6 +67,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=26"></script>
+  <script src="js/main.js?v=31"></script>
 </body>
 </html>

@@ -10,9 +10,23 @@
 // (the live sk_live_… key). It is read from env at runtime and never shipped.
 
 const CATALOG = {
-  'tahini-cookies': { name: 'Half dozen tahini chocolate chunk cookies', amount: 1800 },
-  'coffee-cake':    { name: 'Hazelnut streusel coffee cake (9" round)',  amount: 2800 },
-  'weekend-box':    { name: 'The weekend box',                           amount: 4200 },
+  'tahini-cookies':  { name: 'Half dozen tahini chocolate chunk cookies',   amount: 1800 },
+  'snickerdoodles':  { name: 'Half dozen summer break snickerdoodles',      amount: 2000 },
+  'coffee-cake':     { name: 'Hazelnut streusel coffee cake (9" round)',    amount: 2800 },
+  'weekend-box':     { name: 'The weekend box',                             amount: 4200 },
+};
+
+// Where a cancelled checkout should land, keyed by the page that started it.
+// Unknown sources go to the public preorder page, never the private one.
+const CANCEL_PATHS = {
+  'popup':        '/preorder',
+  'early-access': '/early-access',
+};
+
+// Which popup day the box is for. Drives the Saturday/Sunday split of the bake.
+const DAYS = {
+  sat: 'Saturday August 8',
+  sun: 'Sunday August 9',
 };
 
 const FREE_DELIVERY_OVER = 5000; // cents — free delivery at/above $50
@@ -57,14 +71,22 @@ export default {
 
     const items = Array.isArray(body.items) ? body.items : [];
     const fulfillment = body.fulfillment === 'delivery' ? 'delivery' : 'pickup';
+    // Only sources we know about; anything else is treated as generic so a
+    // stray value can't redirect a cancelled checkout somewhere unintended.
+    const source = Object.hasOwn(CANCEL_PATHS, body.source) ? body.source : 'site';
+    const day = Object.hasOwn(DAYS, body.day) ? body.day : '';
 
     const params = new URLSearchParams();
     params.set('mode', 'payment');
-    params.set('success_url', `${SITE}/thanks?session_id={CHECKOUT_SESSION_ID}`);
-    params.set('cancel_url', `${SITE}/early-access`);
+    // src lets the confirmation page show the right pickup details — popup table
+    // vs. Saturday home pickup — since both flows land on /thanks.
+    params.set('success_url', `${SITE}/thanks?session_id={CHECKOUT_SESSION_ID}&src=${encodeURIComponent(source)}`);
+    params.set('cancel_url', `${SITE}${CANCEL_PATHS[source] || '/preorder'}`);
     params.set('phone_number_collection[enabled]', 'true');
     params.set('metadata[fulfillment]', fulfillment);
-    params.set('metadata[source]', 'early-access');
+    params.set('metadata[source]', source);
+    // Surfaces on the Stripe payment as "Pickup day", so the export sorts by day.
+    if (day) params.set('metadata[pickup_day]', DAYS[day]);
 
     // Optional "notes for Sasha" box on the Stripe checkout page (allergies,
     // pickup timing, etc.). Shows up on the session in the Stripe dashboard.

@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sasha's bakeshop | SE Portland home microbakery</title>
-  <meta name="description" content="A home microbakery in SE Portland baking small batches, fresh every Saturday. Preorder Thursdays, pickup Saturdays." />
+  <title>sasha's bakeshop | SE Portland apartment bakery</title>
+  <meta name="description" content="An apartment bakery in SE Portland. Our first popup is August 8 + 9 at the Radical Harvest Craft Faire, SymbiOp Garden Shop. Preorder by August 5." />
   <link rel="canonical" href="https://sashasbakeshop.com/" />
   <meta name="theme-color" content="#faf3e3" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="sasha's bakeshop" />
-  <meta property="og:title" content="sasha&#x27;s bakeshop | SE Portland home microbakery" />
-  <meta property="og:description" content="A home microbakery in SE Portland baking small batches, fresh every Saturday. Preorder Thursdays, pickup Saturdays." />
+  <meta property="og:title" content="sasha&#x27;s bakeshop | SE Portland apartment bakery" />
+  <meta property="og:description" content="An apartment bakery in SE Portland. Our first popup is August 8 + 9 at the Radical Harvest Craft Faire, SymbiOp Garden Shop. Preorder by August 5." />
   <meta property="og:url" content="https://sashasbakeshop.com/" />
   <meta property="og:image" content="https://sashasbakeshop.com/assets/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="sasha&#x27;s bakeshop | SE Portland home microbakery" />
-  <meta name="twitter:description" content="A home microbakery in SE Portland baking small batches, fresh every Saturday. Preorder Thursdays, pickup Saturdays." />
+  <meta name="twitter:title" content="sasha&#x27;s bakeshop | SE Portland apartment bakery" />
+  <meta name="twitter:description" content="An apartment bakery in SE Portland. Our first popup is August 8 + 9 at the Radical Harvest Craft Faire, SymbiOp Garden Shop. Preorder by August 5." />
   <meta name="twitter:image" content="https://sashasbakeshop.com/assets/og-image.jpg" />
   <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
   <link rel="icon" type="image/png" href="/assets/favicon.png?v=2" />
@@ -26,13 +26,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=20" />
+  <link rel="stylesheet" href="css/styles.css?v=33" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Bakery",
   "name": "sasha's bakeshop",
-  "description": "A licensed home microbakery in SE Portland baking small batches fresh every Saturday. Preorder Thursdays, pickup Saturdays.",
+  "description": "A licensed apartment bakery in SE Portland baking small batches fresh every Saturday. Preorder Thursdays, pickup Saturdays.",
   "url": "https://sashasbakeshop.com/",
   "image": "https://sashasbakeshop.com/assets/og-image.jpg",
   "email": "info@sashasbakeshop.com",
@@ -71,12 +71,18 @@
 
   <main>
     <!-- hero -->
+    <!-- hero-band.is-popup: swaps the hero's red accents to green while the popup
+         is on, so it reads as a special event. Delete this wrapper (and the flag
+         + deadline lines) to put the homepage back to normal. -->
+    <div class="hero-band is-popup">
     <section class="hero">
       <div class="hero-copy">
+        <span class="popup-flag">Our first popup ✶ Aug 8 + 9</span>
         <h1>Small batches,<br />big flavor</h1>
-        <p class="hero-body">A home microbakery in SE Portland baking the flavors I wish I could find. Small batches, fresh every Saturday.</p>
-        <p class="hero-schedule">Order Thursday, pick up fresh Saturday.</p>
-        <a class="btn" href="preorder">Preorder now</a>
+        <p class="hero-body">An apartment bakery in SE Portland baking the flavors I wish I could find. Small batches, fresh every Saturday.</p>
+        <p class="hero-schedule">Find us at the Radical Harvest Craft Faire, August 8 + 9, 12 to 5pm at SymbiOp Garden Shop, 3454 SE Powell Blvd.</p>
+        <p class="popup-deadline">Preorders close Wednesday August 5, 9pm.</p>
+        <a class="btn" href="preorder">Preorder for the popup</a>
       </div>
       <div class="hero-art">
         <div class="hero-carousel" aria-label="Fresh bakes from the oven">
@@ -87,6 +93,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- mainstays squiggle band -->
     <div class="squiggle-band" aria-label="The mainstays">
@@ -106,7 +113,7 @@
     <!-- menu cards -->
     <section class="menu-grid" id="menu">
       <a class="menu-card card-red" href="products/summer-break-snickerdoodle">
-        <div class="ph-tile ph-red">Photo coming soon</div>
+        <img width="1200" height="800" loading="lazy" decoding="async" src="assets/snickerdoodle-macro.jpg" alt="A stack of summer break snickerdoodles, cinnamon-sugar crackled edges" />
         <h3>Summer break snickerdoodle</h3>
         <p>Soft cinnamon-sugar snickerdoodle kissed with coconut and a horchata swirl.</p>
         <p class="menu-price">$4.50</p>
@@ -179,7 +186,7 @@
   <footer class="mega-footer">
     <div class="footer-top">
       <div class="footer-signup">
-        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland home kitchen every Saturday.</p>
+        <p class="footer-tag">Small batches, big flavor. Fresh from a SE Portland apartment kitchen every Saturday.</p>
         <p class="footer-label">Email</p>
         <form class="signup-form footer-form">
           <input type="email" placeholder="Your email" aria-label="Email address" />
@@ -218,6 +225,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=26"></script>
+  <script src="js/main.js?v=31"></script>
 </body>
 </html>

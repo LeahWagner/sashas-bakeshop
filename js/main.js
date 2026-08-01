@@ -3,36 +3,80 @@
 // --- Shop config (single source of truth) ---
 // TODO: drive ordersOpen from the real drop schedule (Thursday 9am open).
 var SB = {
-  // Pre-launch: the shop isn't live yet. The site stays browsable, but ordering
-  // is off and everything counts down to launch. Flip to true on launch day.
-  ordersOpen: false,
-  // First drop drives the launch countdown in the ticker + signs.
-  launchDate: new Date(2026, 7, 20, 9, 0, 0), // Aug 20, 2026 (Thu), 9am (month is 0-indexed)
+  // Launch is the Radical Harvest popup weekend, and preorders for it are LIVE.
+  // Flip to false to gate ordering again (the site stays browsable either way).
+  ordersOpen: true,
+  // Launch day = the popup, not a Thursday drop. Doors at noon.
+  launchDate: new Date(2026, 7, 8, 12, 0, 0), // Sat Aug 8, 2026, 12pm (month is 0-indexed)
+  // The popup we're launching at. One place to edit the event details.
+  popup: {
+    name: 'Radical Harvest Craft Faire',
+    venue: 'SymbiOp Garden Shop',
+    address: '3454 SE Powell Blvd',
+    hours: '12 to 5pm',
+    days: 'Saturday August 8 + Sunday August 9',
+    // Hard close for preorders: everything after this is walk-up only. Wednesday
+    // leaves Thursday to shop and Friday to prep dough before baking Saturday.
+    preorderDeadline: new Date(2026, 7, 5, 21, 0, 0), // Wed Aug 5, 2026, 9pm
+    // Doors open Saturday and the faire wraps Sunday at 5. Between these the site
+    // must say "we're here right now", not "sold out" — that's the whole weekend
+    // of walk-up traffic, and it's when people search for us.
+    start: new Date(2026, 7, 8, 0, 0, 0),  // Sat Aug 8, from midnight
+    end:   new Date(2026, 7, 9, 17, 0, 0)  // Sun Aug 9, 5pm
+  },
   orderMin: 12,      // minimum order total ($)
   freeDeliveryOver: 50, // free delivery at/above this total ($); below it a delivery fee applies at checkout
-  // Stripe Payment Link (LIVE). Shared by the preorder cart and the early-access
-  // page; buyers confirm quantities on Stripe's hosted page. Note: preorder stays
-  // gated (ordersOpen:false) until launch, so only early-access checks out today.
+  // Stripe Payment Link (LIVE). Last-resort fallback only: buyers re-confirm
+  // quantities on Stripe's hosted page, which is no good for building a bake
+  // list. Any page with data-id cards goes through the Worker instead.
   paymentLink: 'https://buy.stripe.com/aFabJ07rCbSvbxt1sm2VG01',
   // Option B checkout: Cloudflare Worker that builds a Stripe Checkout Session
   // with exact cart quantities + delivery. Used on the early-access page when
   // set; empty string falls back to the Payment Link above so nothing breaks.
   checkoutEndpoint: 'https://sashas-checkout.sasharoach02.workers.dev',
-  // Ticker announcements. {countdown} is replaced with a live countdown:
-  // to launch while pre-launch, then to the next Thursday 9am drop.
+  // Ticker announcements. {countdown} is replaced with a live countdown: to the
+  // preorder deadline while it's open, then to the popup, then to Thursday drops.
   announcementsOpen: [
-    'orders are live',
-    'pickup saturday 10am to 1pm, se portland',
-    'new: whole coffee cakes',
-    'the newsletter gets the menu first'
+    'popup august 8 + 9 ✶ radical harvest craft faire',
+    'symbiop garden shop, 3454 se powell, 12 to 5pm',
+    'no thursday drop this week ✶ the popup instead',
+    'limited batches ✶ preorder to be sure ✶ closes in {countdown}'
   ],
   announcementsClosed: [
-    'grand opening thursday august 20',
-    'launching in {countdown}',
-    'preorders open august 20',
+    'preorders are closed ✶ come find us at the popup',
+    'august 8 + 9, 12 to 5pm ✶ symbiop garden shop',
+    'no thursday drop this week ✶ walk up and say hi',
+    'small batches ✶ come early'
+  ],
+  // While the faire is actually happening.
+  announcementsLive: [
+    "we're at the faire right now ✶ 12 to 5pm",
+    'symbiop garden shop, 3454 se powell blvd',
+    'walk up and say hi ✶ no order needed',
     'the newsletter gets the menu first'
+  ],
+  // After the popup. No dates in here, so nothing goes stale and lies on its own.
+  announcementsAfter: [
+    'thanks for an unreal first weekend',
+    'the newsletter hears about the next one first',
+    'custom orders + wholesale ✶ just ask'
   ]
 };
+
+// Three states, one place. Preorders run until the deadline; then the popup
+// itself; then after. Every sign, countdown, and button reads off these.
+function sbPreordersOpen() {
+  var end = SB.popup && SB.popup.preorderDeadline;
+  return SB.ordersOpen && (!end || end > new Date());
+}
+function sbPopupLive() {
+  var p = SB.popup, now = new Date();
+  return !!(p && p.start && p.end && now >= p.start && now <= p.end);
+}
+function sbPopupOver() {
+  var p = SB.popup;
+  return !!(p && p.end && new Date() > p.end);
+}
 
 // Preview trick: append ?preview=closed to any page URL to see the sold-out
 // state (signs, favicon, notify-me forms) without changing the real config.
@@ -61,7 +105,10 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
 
 // --- Announcement ticker above the header (every page) ---
 (function () {
-  var msgs = SB.ordersOpen ? SB.announcementsOpen : SB.announcementsClosed;
+  var msgs = sbPopupLive() ? SB.announcementsLive
+    : sbPopupOver() ? SB.announcementsAfter
+    : sbPreordersOpen() ? SB.announcementsOpen
+    : SB.announcementsClosed;
   if (!msgs || !msgs.length) return;
 
   var ticker = document.createElement('div');
@@ -112,8 +159,12 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
     return target;
   }
   function countdownTarget() {
-    // Before launch, count down to opening day; after, to the next Thursday drop.
-    if (SB.launchDate && SB.launchDate > new Date()) return SB.launchDate;
+    // The deadline is the urgent one, so it wins while preorders are open. After
+    // it passes, count down to the popup itself, then to weekly Thursday drops.
+    var now = new Date();
+    var end = SB.popup && SB.popup.preorderDeadline;
+    if (end && end > now) return end;
+    if (SB.launchDate && SB.launchDate > now) return SB.launchDate;
     return nextDrop();
   }
   function updateCount() {
@@ -143,12 +194,17 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
   // public shop (it would also mislabel the private page as publicly "open").
   if (document.body && document.body.hasAttribute('data-early')) return;
   var prefix = /\/(posts|products)\//.test(location.pathname) ? '../' : '';
-  var preLaunch = SB.launchDate && SB.launchDate > new Date();
+  var open = sbPreordersOpen(), live = sbPopupLive(), over = sbPopupOver();
   var sign = document.createElement('a');
-  sign.className = 'mini-sign' + (SB.ordersOpen ? '' : ' is-closed');
+  // "Live" is not a closed state, so it keeps the open styling: we're there now.
+  sign.className = 'mini-sign' + (open || live ? '' : ' is-closed');
   sign.href = prefix + 'preorder.html';
-  sign.textContent = SB.ordersOpen ? 'Orders open' : (preLaunch ? 'Opening soon' : 'Sold out');
-  sign.setAttribute('aria-label', SB.ordersOpen ? 'Orders are open' : (preLaunch ? 'Opening soon, grand opening August 20' : 'Sold out, orders open Thursday'));
+  sign.textContent = live ? 'Here today' : open ? 'Orders open' : over ? 'Sold out' : 'Popup Aug 8';
+  sign.setAttribute('aria-label', live
+    ? "We're at the Radical Harvest faire today, 12 to 5pm"
+    : open ? 'Orders are open for the August 8 and 9 popup'
+    : over ? 'Sold out'
+    : 'Preorders closed, popup August 8 and 9, walk up welcome');
   brand.after(sign);
 })();
 
@@ -351,7 +407,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
   var cta = document.querySelector('.product-cta');
   if (!cta) return;
   var notify = document.querySelector('.notify-wrap');
-  if (SB.ordersOpen) {
+  if (sbPreordersOpen()) {
     if (notify) notify.classList.add('hidden');
   } else {
     cta.classList.add('hidden');
@@ -383,7 +439,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
   // Taped-paper sign: starts on OPEN; when sold out it card-flips over
   // shortly after landing so visitors catch the flip.
   var sign = document.getElementById('status-sign');
-  if (sign && !SB.ordersOpen) {
+  if (sign && !sbPreordersOpen()) {
     setTimeout(function () { sign.classList.add('is-flipped'); }, 700);
   }
 
@@ -419,32 +475,44 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
     return '$' + n.toFixed(2).replace(/\.00$/, '');
   }
 
+  // On the popup page these counts are the preorder allocation, not everything
+  // that will exist at the table, so that page relabels them. Defaults keep the
+  // original wording everywhere else.
+  var stockWord = grid.dataset.stockWord || 'left';
+  var stockGone = grid.dataset.stockGone || 'Sold out.';
+
   function render() {
     items.forEach(function (it) {
       var left = it.stock - it.qty;
       it.qtyEl.textContent = it.qty;
       it.stockEl.textContent =
-        left <= 0 ? 'Sold out.' :
-        left <= 4 ? 'Only ' + left + ' left!' :
-        left + ' left';
+        left <= 0 ? stockGone :
+        left <= 4 ? 'Only ' + left + ' ' + stockWord + '!' :
+        left + ' ' + stockWord;
       it.stockEl.classList.toggle('is-low', left <= 4);
     });
     var t = totals();
+    // Each page declares its own fulfillment line, so the popup preorder page can
+    // say "grab it at the table" while early access still offers home delivery.
+    var emptyNote = grid.dataset.emptyNote || 'Add something little (or a lot).';
+    var pickupNote = grid.dataset.pickupNote ||
+      ('Pickup Saturday 10am to 1pm, SE Portland. Free delivery over ' + money(SB.freeDeliveryOver) + ', otherwise a fee.');
     cartLabel.textContent = t.count === 0
       ? 'Your box is empty'
       : 'Your box · ' + t.count + (t.count === 1 ? ' treat' : ' treats');
-    cartSub.textContent = t.count === 0
-      ? 'Add something little (or a lot).'
-      : 'Pickup Saturday 10am to 1pm, SE Portland. Free delivery over ' + money(SB.freeDeliveryOver) + ', otherwise a fee.';
+    cartSub.textContent = t.count === 0 ? emptyNote : pickupNote;
     cartTotal.textContent = money(t.total);
 
+    var open = sbPreordersOpen();
     var belowMin = t.count > 0 && t.total < SB.orderMin;
     cartNote.textContent = belowMin
       ? 'Order minimum is ' + money(SB.orderMin) + '. Add ' + money(SB.orderMin - t.total) + ' more.'
       : '';
-    checkoutBtn.disabled = t.count === 0 || belowMin || !SB.ordersOpen;
-    checkoutBtn.textContent = SB.ordersOpen ? 'Check out'
-      : (SB.launchDate && SB.launchDate > new Date()) ? 'Opening Aug 20' : 'Sold out';
+    checkoutBtn.disabled = t.count === 0 || belowMin || !open;
+    checkoutBtn.textContent = open ? 'Check out'
+      : sbPopupLive() ? "We're there now, come by"
+      : sbPopupOver() ? 'Sold out'
+      : 'Come see us Aug 8';
   }
 
   items.forEach(function (it) {
@@ -456,22 +524,31 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
     });
   });
 
-  // The early-access page carries exact quantities through the Worker; every
-  // other page still hands off to the Payment Link (quantities confirmed there).
-  var useWorker = SB.checkoutEndpoint && document.body && document.body.hasAttribute('data-early');
+  // Any page whose cards carry a data-id checks out through the Worker, which
+  // prices from its own server-side catalog and passes exact quantities to
+  // Stripe. That's what makes the order list a usable bake list. Pages without
+  // ids fall back to the Payment Link (quantities re-confirmed on Stripe).
+  var useWorker = !!SB.checkoutEndpoint && items.every(function (it) { return !!it.id; });
 
   function fulfillmentChoice() {
     var sel = document.querySelector('input[name="fulfillment"]:checked');
     return sel ? sel.value : 'pickup';
   }
+  // Which popup day this box is for. Absent on pages without a day picker.
+  function dayChoice() {
+    var sel = document.querySelector('input[name="popup-day"]:checked');
+    return sel ? sel.value : '';
+  }
 
   checkoutBtn.addEventListener('click', function () {
     var t = totals();
-    if (t.count === 0 || t.total < SB.orderMin || !SB.ordersOpen) return;
+    if (t.count === 0 || t.total < SB.orderMin || !sbPreordersOpen()) return;
 
     if (useWorker) {
       var payload = {
         fulfillment: fulfillmentChoice(),
+        day: dayChoice(),
+        source: grid.dataset.source || 'site',
         items: items.filter(function (it) { return it.qty > 0; })
           .map(function (it) { return { id: it.id, qty: it.qty }; })
       };
