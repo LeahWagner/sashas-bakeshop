@@ -1,28 +1,16 @@
 /* sasha's bakeshop - shared scripts */
 
 // --- Shop config (single source of truth) ---
-// TODO: drive ordersOpen from the real drop schedule (Thursday 9am open).
 var SB = {
-  // Launch is the Radical Harvest popup weekend, and preorders for it are LIVE.
-  // Flip to false to gate ordering again (the site stays browsable either way).
+  // Master switch. Flip to false to gate ordering entirely (vacation mode);
+  // the weekly window below handles the normal rhythm on its own.
   ordersOpen: true,
-  // Launch day = the popup, not a Thursday drop. Doors at noon.
-  launchDate: new Date(2026, 7, 8, 12, 0, 0), // Sat Aug 8, 2026, 12pm (month is 0-indexed)
-  // The popup we're launching at. One place to edit the event details.
-  popup: {
-    name: 'Radical Harvest Craft Faire',
-    venue: 'SymbiOp Garden Shop',
-    address: '3454 SE Powell Blvd',
-    hours: '12 to 5pm',
-    days: 'Saturday August 8 + Sunday August 9',
-    // Hard close for preorders: everything after this is walk-up only. Wednesday
-    // leaves Thursday to shop and Friday to prep dough before baking Saturday.
-    preorderDeadline: new Date(2026, 7, 5, 20, 0, 0), // Wed Aug 5, 2026, 8pm
-    // Doors open Saturday and the faire wraps Sunday at 5. Between these the site
-    // must say "we're here right now", not "sold out" — that's the whole weekend
-    // of walk-up traffic, and it's when people search for us.
-    start: new Date(2026, 7, 8, 0, 0, 0),  // Sat Aug 8, from midnight
-    end:   new Date(2026, 7, 9, 17, 0, 0)  // Sun Aug 9, 5pm
+  // The normal drop, every week, no manual flipping:
+  //   open all week -> orders CLOSE Thursday 8pm -> bake -> pickup Saturday
+  //   10am to 1pm -> orders REOPEN Saturday 1pm for the next week.
+  weekly: {
+    cutoffDay: 4,  cutoffHour: 20,  // Thursday 8pm: last call for this week's bake
+    reopenDay: 6,  reopenHour: 13   // Saturday 1pm: pickup ends, next week opens
   },
   orderMin: 12,      // minimum order total ($)
   freeDeliveryOver: 50, // free delivery at/above this total ($); below it a delivery fee applies at checkout
@@ -30,51 +18,43 @@ var SB = {
   // quantities on Stripe's hosted page, which is no good for building a bake
   // list. Any page with data-id cards goes through the Worker instead.
   paymentLink: 'https://buy.stripe.com/aFabJ07rCbSvbxt1sm2VG01',
-  // Option B checkout: Cloudflare Worker that builds a Stripe Checkout Session
-  // with exact cart quantities + delivery. Used on the early-access page when
-  // set; empty string falls back to the Payment Link above so nothing breaks.
+  // Checkout Worker: builds a Stripe Checkout Session with exact cart
+  // quantities + delivery. Empty string falls back to the Payment Link.
   checkoutEndpoint: 'https://sashas-checkout.sasharoach02.workers.dev',
-  // Ticker announcements. {countdown} is replaced with a live countdown: to the
-  // preorder deadline while it's open, then to the popup, then to Thursday drops.
+  // Ticker announcements. {countdown} counts down to Thursday's cutoff while
+  // orders are open, and to the Saturday reopen while they're closed.
   announcementsOpen: [
-    'popup august 8 + 9 ✶ radical harvest craft faire',
-    'symbiop garden shop, 3454 se powell, 12 to 5pm',
-    'limited batches ✶ preorder closes in {countdown}'
-  ],
-  announcementsClosed: [
-    'preorders are closed ✶ come find us at the popup',
-    'august 8 + 9, 12 to 5pm ✶ symbiop garden shop',
-    'walk up and say hi ✶ 3454 se powell blvd',
-    'small batches ✶ come early'
-  ],
-  // While the faire is actually happening.
-  announcementsLive: [
-    "we're at the faire right now ✶ 12 to 5pm",
-    'symbiop garden shop, 3454 se powell blvd',
-    'walk up and say hi ✶ no order needed',
+    'orders are live ✶ close thursday 8pm',
+    'orders close in {countdown}',
+    'pickup saturday 10am to 1pm, se portland',
     'the newsletter gets the menu first'
   ],
-  // After the popup. No dates in here, so nothing goes stale and lies on its own.
-  announcementsAfter: [
-    'thanks for an unreal first weekend',
-    'the newsletter hears about the next one first',
-    'custom orders + wholesale ✶ just ask'
+  announcementsClosed: [
+    'orders are closed ✶ bake mode engaged',
+    'next menu opens in {countdown}',
+    'pickup saturday 10am to 1pm, se portland',
+    'the newsletter gets the menu first'
   ]
 };
 
-// Three states, one place. Preorders run until the deadline; then the popup
-// itself; then after. Every sign, countdown, and button reads off these.
+// The weekly window, one place. Closed between Thursday's cutoff and Saturday's
+// reopen; open the rest of the week. Every sign, countdown, and button reads
+// off these.
+function sbNextWeekly(day, hour) {
+  var now = new Date();
+  var t = new Date(now);
+  t.setHours(hour, 0, 0, 0);
+  var diff = (day - now.getDay() + 7) % 7;
+  if (diff === 0 && now >= t) diff = 7;
+  t.setDate(t.getDate() + diff);
+  return t;
+}
 function sbPreordersOpen() {
-  var end = SB.popup && SB.popup.preorderDeadline;
-  return SB.ordersOpen && (!end || end > new Date());
-}
-function sbPopupLive() {
-  var p = SB.popup, now = new Date();
-  return !!(p && p.start && p.end && now >= p.start && now <= p.end);
-}
-function sbPopupOver() {
-  var p = SB.popup;
-  return !!(p && p.end && new Date() > p.end);
+  if (!SB.ordersOpen) return false;
+  var w = SB.weekly;
+  // Closed exactly when the next reopen comes sooner than the next cutoff
+  // (i.e. we're inside the Thursday-8pm -> Saturday-1pm baking window).
+  return sbNextWeekly(w.cutoffDay, w.cutoffHour) < sbNextWeekly(w.reopenDay, w.reopenHour);
 }
 
 // Preview trick: append ?preview=closed to any page URL to see the sold-out
@@ -104,10 +84,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
 
 // --- Announcement ticker above the header (every page) ---
 (function () {
-  var msgs = sbPopupLive() ? SB.announcementsLive
-    : sbPopupOver() ? SB.announcementsAfter
-    : sbPreordersOpen() ? SB.announcementsOpen
-    : SB.announcementsClosed;
+  var msgs = sbPreordersOpen() ? SB.announcementsOpen : SB.announcementsClosed;
   if (!msgs || !msgs.length) return;
 
   var ticker = document.createElement('div');
@@ -148,23 +125,12 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
     if (!slow) track.style.animation = 'ticker-scroll ' + (one * reps / PX_PER_SEC) + 's linear infinite';
   }
 
-  function nextDrop() {
-    var now = new Date();
-    var target = new Date(now);
-    target.setHours(9, 0, 0, 0);
-    var diff = (4 - now.getDay() + 7) % 7; // Thursday = 4
-    if (diff === 0 && now >= target) diff = 7;
-    target.setDate(target.getDate() + diff);
-    return target;
-  }
   function countdownTarget() {
-    // The deadline is the urgent one, so it wins while preorders are open. After
-    // it passes, count down to the popup itself, then to weekly Thursday drops.
-    var now = new Date();
-    var end = SB.popup && SB.popup.preorderDeadline;
-    if (end && end > now) return end;
-    if (SB.launchDate && SB.launchDate > now) return SB.launchDate;
-    return nextDrop();
+    // Open: count down to Thursday's cutoff. Closed: to Saturday's reopen.
+    var w = SB.weekly;
+    return sbPreordersOpen()
+      ? sbNextWeekly(w.cutoffDay, w.cutoffHour)
+      : sbNextWeekly(w.reopenDay, w.reopenHour);
   }
   function updateCount() {
     var els = track.querySelectorAll('.tick-count');
@@ -193,17 +159,14 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
   // public shop (it would also mislabel the private page as publicly "open").
   if (document.body && document.body.hasAttribute('data-early')) return;
   var prefix = /\/(posts|products)\//.test(location.pathname) ? '../' : '';
-  var open = sbPreordersOpen(), live = sbPopupLive(), over = sbPopupOver();
+  var open = sbPreordersOpen();
   var sign = document.createElement('a');
-  // "Live" is not a closed state, so it keeps the open styling: we're there now.
-  sign.className = 'mini-sign' + (open || live ? '' : ' is-closed');
+  sign.className = 'mini-sign' + (open ? '' : ' is-closed');
   sign.href = prefix + 'preorder.html';
-  sign.textContent = live ? 'Here today' : open ? 'Orders open' : over ? 'Sold out' : 'Popup Aug 8';
-  sign.setAttribute('aria-label', live
-    ? "We're at the Radical Harvest faire today, 12 to 5pm"
-    : open ? 'Orders are open for the August 8 and 9 popup'
-    : over ? 'Sold out'
-    : 'Preorders closed, popup August 8 and 9, walk up welcome');
+  sign.textContent = open ? 'Orders open' : 'Sold out';
+  sign.setAttribute('aria-label', open
+    ? 'Orders are open, close Thursday 8pm'
+    : 'Orders are closed, next menu opens Saturday 1pm');
   brand.after(sign);
 })();
 
@@ -508,10 +471,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
       ? 'Order minimum is ' + money(SB.orderMin) + '. Add ' + money(SB.orderMin - t.total) + ' more.'
       : '';
     checkoutBtn.disabled = t.count === 0 || belowMin || !open;
-    checkoutBtn.textContent = open ? 'Check out'
-      : sbPopupLive() ? "We're there now, come by"
-      : sbPopupOver() ? 'Sold out'
-      : 'Come see us Aug 8';
+    checkoutBtn.textContent = open ? 'Check out' : 'Orders closed';
   }
 
   items.forEach(function (it) {
