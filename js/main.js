@@ -24,7 +24,6 @@ var SB = {
   // Ticker announcements. {countdown} counts down to Thursday's cutoff while
   // orders are open, and to the Saturday reopen while they're closed.
   announcementsOpen: [
-    'orders are live ✶ close thursday 8pm',
     'orders close in {countdown}',
     'pickup saturday 10am to 1pm, se portland',
     'the newsletter gets the menu first'
