@@ -12,6 +12,24 @@ var SB = {
     cutoffDay: 4,  cutoffHour: 20,  // Thursday 8pm: last call for this week's bake
     reopenDay: 6,  reopenHour: 13   // Saturday 1pm: pickup ends, next week opens
   },
+  // Popup takeover: while `end` is in the future, the ticker uses these
+  // announcement sets instead of the normal weekly ones, then falls back on
+  // its own. Page copy (hero, preorder, FAQ, thanks) is reverted by hand
+  // after the weekend. The Thursday-8pm cutoff clock is unchanged.
+  popup: {
+    end: new Date(2026, 8, 6, 16, 0, 0), // Sun Sept 6, 4pm (month is 0-indexed)
+    announcementsOpen: [
+      'popup sept 5 + 6 ✶ radical harvest at symbiop',
+      '11am to 4pm ✶ 3454 se powell blvd',
+      'preorder closes in {countdown}',
+      'your box waits at the table with your name on it'
+    ],
+    announcementsClosed: [
+      'preorders closed ✶ come find us at the popup',
+      'sept 5 + 6 ✶ 11am to 4pm ✶ symbiop garden shop',
+      'walk up and say hi ✶ small batches, come early'
+    ]
+  },
   orderMin: 12,      // minimum order total ($)
   freeDeliveryOver: 50, // free delivery at/above this total ($); below it a delivery fee applies at checkout
   // Stripe Payment Link (LIVE). Last-resort fallback only: buyers re-confirm
@@ -83,7 +101,11 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
 
 // --- Announcement ticker above the header (every page) ---
 (function () {
-  var msgs = sbPreordersOpen() ? SB.announcementsOpen : SB.announcementsClosed;
+  // During a popup window the popup sets take over; they expire on their own.
+  var popupOn = SB.popup && SB.popup.end && new Date() < SB.popup.end;
+  var msgs = sbPreordersOpen()
+    ? (popupOn ? SB.popup.announcementsOpen : SB.announcementsOpen)
+    : (popupOn ? SB.popup.announcementsClosed : SB.announcementsClosed);
   if (!msgs || !msgs.length) return;
 
   var ticker = document.createElement('div');

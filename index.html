@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=35" />
+  <link rel="stylesheet" href="css/styles.css?v=36" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -71,12 +71,18 @@
 
   <main>
     <!-- hero -->
+    <!-- hero-band.is-popup: swaps the hero's red accents to green while the popup
+         is on. Delete this wrapper (and the flag + deadline lines) to put the
+         homepage back to normal after the weekend. -->
+    <div class="hero-band is-popup">
     <section class="hero">
       <div class="hero-copy">
+        <span class="popup-flag">Popup ✶ Sept 5 + 6</span>
         <h1>Small batches,<br />big flavor</h1>
         <p class="hero-body">An apartment bakery in SE Portland baking the flavors I wish I could find. Small batches, fresh every Saturday.</p>
-        <p class="hero-schedule">Order by Thursday 8pm → pickup Saturday 10am to 1pm</p>
-        <a class="btn" href="preorder">Preorder now</a>
+        <p class="hero-schedule">Find us at Radical Harvest, Saturday Sept 5 + Sunday Sept 6, 11am to 4pm at SymbiOp Garden Shop, 3454 SE Powell Blvd.</p>
+        <p class="popup-deadline">Preorder by Thursday 8pm and your box is waiting at the table.</p>
+        <a class="btn" href="preorder">Preorder for the popup</a>
       </div>
       <div class="hero-art">
         <div class="hero-carousel" aria-label="Fresh bakes from the oven">
@@ -87,6 +93,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- mainstays squiggle band -->
     <div class="squiggle-band" aria-label="The mainstays">
@@ -218,6 +225,6 @@
     <div class="mega-brand" aria-hidden="true">sasha's</div>
   </footer>
 
-  <script src="js/main.js?v=35"></script>
+  <script src="js/main.js?v=36"></script>
 </body>
 </html>
