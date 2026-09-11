@@ -490,6 +490,9 @@ a.menu-card:hover {
 .hero-band.is-popup .btn:hover { background: var(--olive-deep); color: var(--cream); }
 .hero-band.is-popup .hero-schedule,
 .hero-band.is-popup .popup-deadline { color: var(--olive-deep); }
+/* Event weeks carry the key logistics in the hero: size them like they matter. */
+.hero-band.is-popup .hero-schedule { font: 600 17px/1.7 var(--font-body); max-width: 560px; }
+.hero-band.is-popup .popup-deadline { font: 700 17px/1.5 var(--font-body); }
 /* The schedule line's 32px bottom margin stacks with the deadline's top margin
    into a ~50px hole. Tighten it only when the deadline actually follows. */
 .hero-copy .hero-schedule:has(+ .popup-deadline) { margin-bottom: 10px; }

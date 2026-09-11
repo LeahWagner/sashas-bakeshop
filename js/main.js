@@ -26,17 +26,17 @@ var SB = {
     preorderDeadline: new Date(2026, 8, 17, 20, 0, 0), // Thu Sept 17, 8pm (month is 0-indexed)
     end: new Date(2026, 8, 20, 13, 0, 0),              // Sun Sept 20, 1pm: Puff wraps
     announcementsOpen: [
-      'two events sept 19 + 20 ✶ preorder now',
-      'sat: belmont street fair ✶ 10am to 5pm',
-      'sun: puff coffee, 2816-a se stark ✶ 9am til sold out',
+      'two events sept 19 + 20, preorder now',
+      'sat: belmont street fair, 10am to 5pm',
+      'sun: puff coffee, 2816-a se stark, 9am til sold out',
       'preorder closes in {countdown}',
-      'skipping the sept 12 home pickup ✶ all in on the events'
+      'skipping the sept 12 home pickup, all in on the events'
     ],
     announcementsClosed: [
-      'preorders closed ✶ come find us this weekend',
-      'sat: belmont street fair, se belmont from 33rd to 39th ✶ 10 to 5',
-      'sun: puff coffee, 2816-a se stark ✶ 9am til sold out',
-      'walk up and say hi ✶ small batches, come early'
+      'preorders closed, come find us this weekend',
+      'sat: belmont street fair, se belmont from 33rd to 39th, 10 to 5',
+      'sun: puff coffee, 2816-a se stark, 9am til sold out',
+      'online orders reopen sunday for next saturday'
     ]
   },
   orderMin: 12,      // minimum order total ($)
@@ -56,7 +56,7 @@ var SB = {
     'the newsletter gets the menu first'
   ],
   announcementsClosed: [
-    'orders are closed ✶ bake mode engaged',
+    'orders are closed, bake mode engaged',
     'next menu opens in {countdown}',
     'pickup saturday 10am to 1pm, se portland',
     'the newsletter gets the menu first'
