@@ -12,8 +12,8 @@
 const CATALOG = {
   'tahini-cookies':  { name: 'Half dozen tahini chocolate chunk cookies',   amount: 1800 },
   'snickerdoodles':  { name: 'Half dozen summer break snickerdoodles',      amount: 2000 },
-  'coffee-cake':     { name: 'Hazelnut streusel coffee cake (9" round)',    amount: 2800 },
-  'weekend-box':     { name: 'The weekend box',                             amount: 4200 },
+  'coffee-cake':     { name: 'Hazelnut streusel coffee cake minis (4 pack)', amount: 2200 },
+  'weekend-box':     { name: 'The weekend box',                             amount: 3600 },
 };
 
 // Where a cancelled checkout should land, keyed by the page that started it.
