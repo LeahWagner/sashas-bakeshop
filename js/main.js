@@ -13,20 +13,29 @@ var SB = {
     reopenDay: 6,  reopenHour: 13   // Saturday 1pm: pickup ends, next week opens
   },
   // Popup takeover: while `end` is in the future, the ticker uses these
-  // announcement sets instead of the normal weekly ones, then falls back on
-  // its own. Page copy (hero, preorder, FAQ, thanks) is reverted by hand
-  // after the weekend. The Thursday-8pm cutoff clock is unchanged.
+  // announcement sets and (when `preorderDeadline` is set) preorders run on
+  // the popup clock instead of the weekly window: open right now, closed at
+  // the deadline, closed through the events. After `end` everything falls
+  // back to the weekly rhythm on its own. Page copy (hero, preorder, FAQ,
+  // thanks) is reverted by hand after the weekend.
+  //
+  // Sept 19 + 20 double weekend (no home pickup Sept 12, break week):
+  //   Sat 9/19: Belmont District Street Fair, SE Belmont St (33rd to 39th), 10am-5pm
+  //   Sun 9/20: Puff Coffee, 2816-A SE Stark St, 9am-1pm or sold out
   popup: {
-    end: new Date(2026, 8, 6, 16, 0, 0), // Sun Sept 6, 4pm (month is 0-indexed)
+    preorderDeadline: new Date(2026, 8, 17, 20, 0, 0), // Thu Sept 17, 8pm (month is 0-indexed)
+    end: new Date(2026, 8, 20, 13, 0, 0),              // Sun Sept 20, 1pm: Puff wraps
     announcementsOpen: [
-      'popup sept 5 + 6 ✶ radical harvest at symbiop',
-      '11am to 4pm ✶ 3454 se powell blvd',
+      'two events sept 19 + 20 ✶ preorder now',
+      'sat: belmont street fair ✶ 10am to 5pm',
+      'sun: puff coffee, 2816-a se stark ✶ 9am til sold out',
       'preorder closes in {countdown}',
-      'your box waits at the table with your name on it'
+      'skipping the sept 12 home pickup ✶ all in on the events'
     ],
     announcementsClosed: [
-      'preorders closed ✶ come find us at the popup',
-      'sept 5 + 6 ✶ 11am to 4pm ✶ symbiop garden shop',
+      'preorders closed ✶ come find us this weekend',
+      'sat: belmont street fair, se belmont from 33rd to 39th ✶ 10 to 5',
+      'sun: puff coffee, 2816-a se stark ✶ 9am til sold out',
       'walk up and say hi ✶ small batches, come early'
     ]
   },
@@ -66,8 +75,16 @@ function sbNextWeekly(day, hour) {
   t.setDate(t.getDate() + diff);
   return t;
 }
+function sbPopupActive() {
+  return !!(SB.popup && SB.popup.end && new Date() < SB.popup.end);
+}
 function sbPreordersOpen() {
   if (!SB.ordersOpen) return false;
+  // During a popup with its own deadline, the popup clock replaces the weekly
+  // window entirely: open right up to the deadline, closed through the events.
+  if (sbPopupActive() && SB.popup.preorderDeadline) {
+    return new Date() < SB.popup.preorderDeadline;
+  }
   var w = SB.weekly;
   // Closed exactly when the next reopen comes sooner than the next cutoff
   // (i.e. we're inside the Thursday-8pm -> Saturday-1pm baking window).
@@ -102,7 +119,7 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
 // --- Announcement ticker above the header (every page) ---
 (function () {
   // During a popup window the popup sets take over; they expire on their own.
-  var popupOn = SB.popup && SB.popup.end && new Date() < SB.popup.end;
+  var popupOn = sbPopupActive();
   var msgs = sbPreordersOpen()
     ? (popupOn ? SB.popup.announcementsOpen : SB.announcementsOpen)
     : (popupOn ? SB.popup.announcementsClosed : SB.announcementsClosed);
@@ -147,7 +164,11 @@ if (document.body && document.body.hasAttribute('data-early')) SB.ordersOpen = t
   }
 
   function countdownTarget() {
-    // Open: count down to Thursday's cutoff. Closed: to Saturday's reopen.
+    // Popup weeks count to the popup's own deadline; normal weeks count to
+    // Thursday's cutoff while open and Saturday's reopen while closed.
+    if (sbPopupActive() && SB.popup.preorderDeadline && sbPreordersOpen()) {
+      return SB.popup.preorderDeadline;
+    }
     var w = SB.weekly;
     return sbPreordersOpen()
       ? sbNextWeekly(w.cutoffDay, w.cutoffHour)

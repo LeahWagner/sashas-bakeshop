@@ -25,8 +25,8 @@ const CANCEL_PATHS = {
 
 // Which popup day the box is for. Drives the Saturday/Sunday split of the bake.
 const DAYS = {
-  sat: 'Saturday September 5',
-  sun: 'Sunday September 6',
+  sat: 'Saturday September 19 (Belmont Street Fair)',
+  sun: 'Sunday September 20 (Puff Coffee)',
 };
 
 const FREE_DELIVERY_OVER = 5000; // cents — free delivery at/above $50
