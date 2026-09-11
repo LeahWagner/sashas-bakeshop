@@ -30,7 +30,7 @@ var SB = {
       'sat: belmont street fair, 10am to 5pm',
       'sun: puff coffee, 2816-a se stark, 9am til sold out',
       'preorder closes in {countdown}',
-      'skipping the sept 12 home pickup, all in on the events'
+      'closed this week, will be back next weekend'
     ],
     announcementsClosed: [
       'preorders closed, come find us this weekend',
